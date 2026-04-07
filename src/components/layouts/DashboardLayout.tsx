@@ -1,0 +1,77 @@
+import { ReactNode } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Home, ListChecks, Trophy, User, LogOut, LayoutDashboard, PlusCircle, Settings } from "lucide-react";
+
+const userLinks = [
+  { label: "Home", href: "/dashboard", icon: Home },
+  { label: "Tasks", href: "/dashboard/tasks", icon: ListChecks },
+  { label: "Leaderboard", href: "/dashboard/leaderboard", icon: Trophy },
+  { label: "Profile", href: "/dashboard/profile", icon: User },
+];
+
+const adminLinks = [
+  { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
+  { label: "Create Task", href: "/admin/create-task", icon: PlusCircle },
+  { label: "Manage Tasks", href: "/admin/manage-tasks", icon: Settings },
+];
+
+interface DashboardLayoutProps {
+  children: ReactNode;
+  variant?: "user" | "admin";
+}
+
+const DashboardLayout = ({ children, variant = "user" }: DashboardLayoutProps) => {
+  const location = useLocation();
+  const links = variant === "admin" ? adminLinks : userLinks;
+
+  return (
+    <div className="min-h-screen bg-background flex">
+      {/* Sidebar */}
+      <aside className="w-64 border-r border-border bg-card/40 flex flex-col fixed top-0 left-0 h-screen z-40">
+        <div className="p-6 border-b border-border">
+          <Link to="/" className="font-display text-2xl font-bold text-gradient-primary">
+            Nestlle
+          </Link>
+          <p className="text-xs text-muted-foreground mt-1 capitalize">{variant} Panel</p>
+        </div>
+
+        <nav className="flex-1 p-4 space-y-1">
+          {links.map((link) => {
+            const isActive = location.pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                to={link.href}
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                  isActive
+                    ? "bg-primary/15 text-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <link.icon size={18} />
+                {link.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="p-4 border-t border-border">
+          <Link
+            to="/"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+          >
+            <LogOut size={18} />
+            Logout
+          </Link>
+        </div>
+      </aside>
+
+      {/* Main content */}
+      <main className="flex-1 ml-64 min-h-screen">
+        <div className="p-8">{children}</div>
+      </main>
+    </div>
+  );
+};
+
+export default DashboardLayout;
