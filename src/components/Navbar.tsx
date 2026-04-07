@@ -1,11 +1,11 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { label: "Features", href: "#features" },
   { label: "Culture", href: "#culture" },
-  { label: "Creators", href: "#creators" },
   { label: "How It Works", href: "#how-it-works" },
 ];
 
@@ -20,9 +20,9 @@ const Navbar = () => {
       className="fixed top-0 left-0 right-0 z-50 glass"
     >
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
-        <a href="#" className="font-display text-2xl font-bold text-gradient-primary">
+        <Link to="/" className="font-display text-2xl font-bold text-gradient-primary">
           Nestlle
-        </a>
+        </Link>
 
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-8">
@@ -35,12 +35,18 @@ const Navbar = () => {
               {link.label}
             </a>
           ))}
-          <a
-            href="#join"
+          <Link
+            to="/login"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Login
+          </Link>
+          <Link
+            to="/signup"
             className="px-5 py-2 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity"
           >
-            Join Waitlist
-          </a>
+            Get Started
+          </Link>
         </div>
 
         {/* Mobile toggle */}
@@ -68,12 +74,16 @@ const Navbar = () => {
                   {link.label}
                 </a>
               ))}
-              <a
-                href="#join"
+              <Link to="/login" onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground transition-colors">
+                Login
+              </Link>
+              <Link
+                to="/signup"
+                onClick={() => setOpen(false)}
                 className="px-5 py-2 rounded-lg bg-primary text-primary-foreground font-medium text-sm text-center"
               >
-                Join Waitlist
-              </a>
+                Get Started
+              </Link>
             </div>
           </motion.div>
         )}
