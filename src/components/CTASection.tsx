@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 const CTASection = () => {
@@ -19,23 +20,23 @@ const CTASection = () => {
             Engagement?
           </h2>
           <p className="text-muted-foreground mb-10 max-w-lg mx-auto">
-            Join the waitlist to be among the first communities, creators, and learners on Nestlle.
+            Join Nestlle and become part of the next generation of Web3 community engagement.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 px-5 py-3.5 rounded-lg bg-muted border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-            />
-            <button className="px-8 py-3.5 rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity glow-primary whitespace-nowrap">
-              Get Early Access
-            </button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              to="/signup"
+              className="px-8 py-3.5 rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity glow-primary"
+            >
+              Get Started
+            </Link>
+            <Link
+              to="/login"
+              className="px-8 py-3.5 rounded-lg glass text-foreground font-semibold hover:bg-muted transition-colors"
+            >
+              Login
+            </Link>
           </div>
-
-          <p className="text-xs text-muted-foreground mt-4">
-            No spam. Just updates on launch and early access perks.
-          </p>
         </motion.div>
       </div>
     </section>
