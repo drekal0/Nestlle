@@ -1,16 +1,28 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Wallet, Mail } from "lucide-react";
+import { Wallet, Mail, Loader2 } from "lucide-react";
+import { useWallet } from "@/contexts/WalletContext";
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const { connectMetaMask, connectWalletConnect, isConnected, isConnecting, address, shortenAddress } = useWallet();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSignUp = (e: React.FormEvent) => {
     e.preventDefault();
+    navigate("/dashboard");
+  };
+
+  const handleWalletSignUp = async (method: "metamask" | "walletconnect") => {
+    if (method === "metamask") {
+      await connectMetaMask();
+    } else {
+      await connectWalletConnect();
+    }
+    // After connection, navigate to dashboard
     navigate("/dashboard");
   };
 
@@ -33,15 +45,32 @@ const SignUp = () => {
         <div className="glass rounded-2xl p-8">
           <div className="space-y-3 mb-6">
             <button
-              onClick={() => navigate("/dashboard")}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg border border-border bg-muted/50 text-sm font-medium hover:bg-muted transition-colors"
+              onClick={() => handleWalletSignUp("metamask")}
+              disabled={isConnecting}
+              className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border border-border bg-muted/50 text-sm font-medium hover:bg-muted hover:border-primary/30 transition-all disabled:opacity-50"
             >
-              <Wallet size={18} className="text-primary" />
-              Continue with Wallet
+              {isConnecting ? (
+                <Loader2 size={18} className="text-primary animate-spin" />
+              ) : (
+                <span className="text-lg">🦊</span>
+              )}
+              {isConnected ? `Connected: ${shortenAddress(address)}` : "Continue with MetaMask"}
+            </button>
+            <button
+              onClick={() => handleWalletSignUp("walletconnect")}
+              disabled={isConnecting}
+              className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border border-border bg-muted/50 text-sm font-medium hover:bg-muted hover:border-primary/30 transition-all disabled:opacity-50"
+            >
+              {isConnecting ? (
+                <Loader2 size={18} className="text-primary animate-spin" />
+              ) : (
+                <Wallet size={18} className="text-primary" />
+              )}
+              Continue with WalletConnect
             </button>
             <button
               onClick={() => navigate("/dashboard")}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg border border-border bg-muted/50 text-sm font-medium hover:bg-muted transition-colors"
+              className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border border-border bg-muted/50 text-sm font-medium hover:bg-muted hover:border-accent/30 transition-all"
             >
               <Mail size={18} className="text-accent" />
               Continue with Google
@@ -50,7 +79,7 @@ const SignUp = () => {
 
           <div className="flex items-center gap-4 mb-6">
             <div className="flex-1 h-px bg-border" />
-            <span className="text-xs text-muted-foreground">or</span>
+            <span className="text-xs text-muted-foreground">or sign up with email</span>
             <div className="flex-1 h-px bg-border" />
           </div>
 

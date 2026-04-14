@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Home, ListChecks, Trophy, User, LogOut, LayoutDashboard, PlusCircle, Settings } from "lucide-react";
+import WalletButton from "@/components/WalletButton";
 
 const userLinks = [
   { label: "Home", href: "/dashboard", icon: Home },
@@ -55,7 +56,11 @@ const DashboardLayout = ({ children, variant = "user" }: DashboardLayoutProps) =
           })}
         </nav>
 
+        {/* Wallet in sidebar */}
         <div className="p-4 border-t border-border">
+          <div className="mb-3">
+            <WalletButton variant="compact" />
+          </div>
           <Link
             to="/"
             className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
