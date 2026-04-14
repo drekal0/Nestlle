@@ -1,14 +1,26 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Wallet, Loader2 } from "lucide-react";
+import { useWallet } from "@/contexts/WalletContext";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { connectMetaMask, connectWalletConnect, isConnecting } = useWallet();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    navigate("/dashboard");
+  };
+
+  const handleWalletLogin = async (method: "metamask" | "walletconnect") => {
+    if (method === "metamask") {
+      await connectMetaMask();
+    } else {
+      await connectWalletConnect();
+    }
     navigate("/dashboard");
   };
 
@@ -29,6 +41,40 @@ const Login = () => {
         </div>
 
         <div className="glass rounded-2xl p-8">
+          {/* Wallet Login */}
+          <div className="space-y-3 mb-6">
+            <button
+              onClick={() => handleWalletLogin("metamask")}
+              disabled={isConnecting}
+              className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border border-border bg-muted/50 text-sm font-medium hover:bg-muted hover:border-primary/30 transition-all disabled:opacity-50"
+            >
+              {isConnecting ? (
+                <Loader2 size={18} className="text-primary animate-spin" />
+              ) : (
+                <span className="text-lg">🦊</span>
+              )}
+              Login with MetaMask
+            </button>
+            <button
+              onClick={() => handleWalletLogin("walletconnect")}
+              disabled={isConnecting}
+              className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border border-border bg-muted/50 text-sm font-medium hover:bg-muted hover:border-primary/30 transition-all disabled:opacity-50"
+            >
+              {isConnecting ? (
+                <Loader2 size={18} className="text-primary animate-spin" />
+              ) : (
+                <Wallet size={18} className="text-primary" />
+              )}
+              Login with WalletConnect
+            </button>
+          </div>
+
+          <div className="flex items-center gap-4 mb-6">
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-xs text-muted-foreground">or use email</span>
+            <div className="flex-1 h-px bg-border" />
+          </div>
+
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="text-sm font-medium mb-1.5 block">Email</label>
