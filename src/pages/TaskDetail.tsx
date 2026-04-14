@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Clock, Users, Trophy, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Clock, Users, Trophy, CheckCircle2, Heart, Award } from "lucide-react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
+import TipCreatorModal from "@/components/TipCreatorModal";
+import ClaimBadgeModal from "@/components/ClaimBadgeModal";
 import { mockTasks } from "@/data/mockData";
+import { useWallet } from "@/contexts/WalletContext";
 
 const TaskDetail = () => {
   const { id } = useParams();
@@ -11,6 +14,9 @@ const TaskDetail = () => {
   const task = mockTasks.find((t) => t.id === id);
   const [status, setStatus] = useState(task?.status || "not_started");
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showTip, setShowTip] = useState(false);
+  const [showClaimBadge, setShowClaimBadge] = useState(false);
+  const { isConnected } = useWallet();
 
   if (!task) {
     return (
@@ -57,19 +63,43 @@ const TaskDetail = () => {
                 <Trophy size={20} />
                 {task.reward}
               </div>
+
               {task.rewardType === "badge" && (
-                <div className="mt-6 glass rounded-xl p-4 inline-block">
-                  <p className="text-xs text-muted-foreground mb-1">Badge Earned</p>
-                  <p className="font-display font-semibold text-accent">🏅 {task.reward}</p>
+                <div className="mt-6">
+                  <div className="glass rounded-xl p-4 inline-block mb-3">
+                    <p className="text-xs text-muted-foreground mb-1">Badge Earned</p>
+                    <p className="font-display font-semibold text-accent">🏅 {task.reward}</p>
+                  </div>
+                  {isConnected && (
+                    <div>
+                      <button
+                        onClick={() => setShowClaimBadge(true)}
+                        className="mt-2 flex items-center gap-2 mx-auto px-4 py-2 rounded-lg bg-accent/10 text-accent text-sm font-medium hover:bg-accent/20 transition-colors"
+                      >
+                        <Award size={16} />
+                        Claim as NFT Badge
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
-              <div className="mt-8">
+
+              <div className="mt-8 flex items-center justify-center gap-4">
                 <Link
                   to="/dashboard/tasks"
                   className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity"
                 >
                   View More Tasks
                 </Link>
+                {isConnected && (
+                  <button
+                    onClick={() => setShowTip(true)}
+                    className="px-6 py-3 rounded-lg border border-accent/30 text-accent font-medium hover:bg-accent/10 transition-colors flex items-center gap-2"
+                  >
+                    <Heart size={16} />
+                    Tip Creator
+                  </button>
+                )}
               </div>
             </motion.div>
           ) : (
@@ -113,11 +143,21 @@ const TaskDetail = () => {
                   )}
                 </div>
 
+                {task.type === "onchain" && !isConnected && (
+                  <div className="bg-accent/5 border border-accent/20 rounded-xl p-4 mb-6">
+                    <p className="text-sm text-accent font-medium">⚠️ Wallet Required</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      This on-chain task requires a connected wallet. Connect your wallet from the sidebar to proceed.
+                    </p>
+                  </div>
+                )}
+
                 <div className="flex gap-3">
                   {status === "not_started" && (
                     <button
                       onClick={handleStart}
-                      className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity glow-primary"
+                      disabled={task.type === "onchain" && !isConnected}
+                      className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity glow-primary disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Start Task
                     </button>
@@ -137,12 +177,37 @@ const TaskDetail = () => {
                       <span className="font-medium">Completed</span>
                     </div>
                   )}
+
+                  {isConnected && status !== "not_started" && (
+                    <button
+                      onClick={() => setShowTip(true)}
+                      className="px-4 py-3 rounded-lg border border-accent/30 text-accent text-sm font-medium hover:bg-accent/10 transition-colors flex items-center gap-2"
+                    >
+                      <Heart size={16} />
+                      Tip Creator
+                    </button>
+                  )}
                 </div>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </motion.div>
+
+      <TipCreatorModal
+        creatorName="Task Creator"
+        isOpen={showTip}
+        onClose={() => setShowTip(false)}
+      />
+
+      {showClaimBadge && (
+        <ClaimBadgeModal
+          badgeName={task.reward}
+          badgeIcon="🏅"
+          isOpen={showClaimBadge}
+          onClose={() => setShowClaimBadge(false)}
+        />
+      )}
     </DashboardLayout>
   );
 };
