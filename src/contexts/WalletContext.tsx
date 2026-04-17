@@ -1,18 +1,16 @@
-import { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useLayoutEffect, ReactNode } from "react";
+import { StellarWalletsKit } from "@creit.tech/stellar-wallets-kit/sdk";
+import { KitEventType } from "@creit.tech/stellar-wallets-kit/types";
+import { initStellarWalletsKit } from "@/lib/stellarWalletKit";
 
 interface WalletState {
   address: string | null;
   isConnected: boolean;
-  isConnecting: boolean;
-  chainId: number | null;
   balance: string;
-  ensName: string | null;
 }
 
 interface WalletContextType extends WalletState {
-  connectMetaMask: () => Promise<void>;
-  connectWalletConnect: () => Promise<void>;
-  disconnect: () => void;
+  disconnect: () => Promise<void>;
   shortenAddress: (addr?: string | null) => string;
 }
 
@@ -24,100 +22,77 @@ export const useWallet = () => {
   return ctx;
 };
 
+/** Stellar public keys start with G and are 56 chars. */
 const shortenAddress = (addr?: string | null) => {
   if (!addr) return "";
+  if (addr.startsWith("G") && addr.length > 8) {
+    return `${addr.slice(0, 4)}...${addr.slice(-4)}`;
+  }
   return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 };
 
-// Simulate wallet interactions for demo
-const generateMockAddress = () => {
-  const chars = "0123456789abcdef";
-  let addr = "0x";
-  for (let i = 0; i < 40; i++) addr += chars[Math.floor(Math.random() * 16)];
-  return addr;
+async function fetchXlmBalance(address: string): Promise<string> {
+  try {
+    const res = await fetch(`https://horizon.stellar.org/accounts/${address}`);
+    if (!res.ok) return "—";
+    const data = (await res.json()) as {
+      balances?: { asset_type: string; balance: string }[];
+    };
+    const native = data.balances?.find((b) => b.asset_type === "native");
+    return native ? Number(native.balance).toFixed(4) : "0";
+  } catch {
+    return "—";
+  }
+}
+
+const emptyWallet: WalletState = {
+  address: null,
+  isConnected: false,
+  balance: "0",
 };
 
 export const WalletProvider = ({ children }: { children: ReactNode }) => {
-  const [wallet, setWallet] = useState<WalletState>({
-    address: null,
-    isConnected: false,
-    isConnecting: false,
-    chainId: null,
-    balance: "0",
-    ensName: null,
-  });
+  const [wallet, setWallet] = useState<WalletState>(emptyWallet);
 
-  const connectMetaMask = useCallback(async () => {
-    setWallet((prev) => ({ ...prev, isConnecting: true }));
+  useLayoutEffect(() => {
+    initStellarWalletsKit();
 
-    // Check if MetaMask is available
-    if (typeof window !== "undefined" && (window as any).ethereum?.isMetaMask) {
+    const syncFromKit = async () => {
       try {
-        const accounts = await (window as any).ethereum.request({
-          method: "eth_requestAccounts",
-        });
-        const chainId = await (window as any).ethereum.request({
-          method: "eth_chainId",
-        });
-        const balance = await (window as any).ethereum.request({
-          method: "eth_getBalance",
-          params: [accounts[0], "latest"],
-        });
-        const ethBalance = (parseInt(balance, 16) / 1e18).toFixed(4);
+        const { address } = await StellarWalletsKit.getAddress();
+        const balance = address.startsWith("G") ? await fetchXlmBalance(address) : "0";
         setWallet({
-          address: accounts[0],
+          address,
           isConnected: true,
-          isConnecting: false,
-          chainId: parseInt(chainId, 16),
-          balance: ethBalance,
-          ensName: null,
+          balance,
         });
       } catch {
-        setWallet((prev) => ({ ...prev, isConnecting: false }));
+        setWallet(emptyWallet);
       }
-    } else {
-      // Demo fallback when MetaMask not installed
-      await new Promise((r) => setTimeout(r, 1200));
-      setWallet({
-        address: generateMockAddress(),
-        isConnected: true,
-        isConnecting: false,
-        chainId: 1,
-        balance: "1.2450",
-        ensName: null,
-      });
-    }
+    };
+
+    void syncFromKit();
+
+    const offState = StellarWalletsKit.on(KitEventType.STATE_UPDATED, () => {
+      void syncFromKit();
+    });
+    const offDisconnect = StellarWalletsKit.on(KitEventType.DISCONNECT, () => {
+      setWallet(emptyWallet);
+    });
+
+    return () => {
+      offState();
+      offDisconnect();
+    };
   }, []);
 
-  const connectWalletConnect = useCallback(async () => {
-    setWallet((prev) => ({ ...prev, isConnecting: true }));
-    // Simulate WalletConnect flow
-    await new Promise((r) => setTimeout(r, 1500));
-    setWallet({
-      address: generateMockAddress(),
-      isConnected: true,
-      isConnecting: false,
-      chainId: 1,
-      balance: "0.8320",
-      ensName: "user.eth",
-    });
-  }, []);
-
-  const disconnect = useCallback(() => {
-    setWallet({
-      address: null,
-      isConnected: false,
-      isConnecting: false,
-      chainId: null,
-      balance: "0",
-      ensName: null,
-    });
+  const disconnect = useCallback(async () => {
+    await StellarWalletsKit.disconnect();
+    setWallet(emptyWallet);
   }, []);
 
   return (
-    <WalletContext.Provider
-      value={{ ...wallet, connectMetaMask, connectWalletConnect, disconnect, shortenAddress }}
-    >
+    <WalletContext.Provider value={{ ...wallet, disconnect, shortenAddress }}>
       {children}
     </WalletContext.Provider>
   );

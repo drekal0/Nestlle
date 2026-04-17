@@ -11,7 +11,7 @@ const HeroSection = () => {
       <div className="relative z-10 container mx-auto px-6 text-center max-w-4xl">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }}>
           <span className="inline-block px-4 py-1.5 rounded-full glass text-xs font-medium text-accent tracking-wider uppercase mb-6">
-            The Engagement Layer of Web3
+            The Engagement Layer on Stellar
           </span>
         </motion.div>
 
@@ -32,7 +32,7 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.7 }}
           className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10"
         >
-          A verifiable engagement hub where communities play, learn, and earn — powered by blockchain transparency and rooted in African cultural advancement.
+          A verifiable engagement hub where communities play, learn, and earn — powered by Stellar transparency and rooted in African cultural advancement.
         </motion.p>
 
         <motion.div

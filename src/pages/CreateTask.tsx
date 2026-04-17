@@ -80,7 +80,7 @@ const CreateTask = () => {
                   className="w-full px-4 py-3 rounded-lg bg-muted border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
                 >
                   <option value="social">Social</option>
-                  <option value="onchain">On-Chain</option>
+                  <option value="onchain">Stellar on-chain</option>
                   <option value="educational">Educational</option>
                   <option value="custom">Custom</option>
                 </select>

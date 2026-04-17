@@ -77,7 +77,7 @@ const TaskDetail = () => {
                         className="mt-2 flex items-center gap-2 mx-auto px-4 py-2 rounded-lg bg-accent/10 text-accent text-sm font-medium hover:bg-accent/20 transition-colors"
                       >
                         <Award size={16} />
-                        Claim as NFT Badge
+                        Claim badge on Stellar
                       </button>
                     </div>
                   )}
@@ -145,9 +145,9 @@ const TaskDetail = () => {
 
                 {task.type === "onchain" && !isConnected && (
                   <div className="bg-accent/5 border border-accent/20 rounded-xl p-4 mb-6">
-                    <p className="text-sm text-accent font-medium">⚠️ Wallet Required</p>
+                    <p className="text-sm text-accent font-medium">⚠️ Stellar wallet required</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      This on-chain task requires a connected wallet. Connect your wallet from the sidebar to proceed.
+                      This Stellar-network task needs a connected account. Connect from the header or sidebar to proceed.
                     </p>
                   </div>
                 )}

@@ -1,26 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Wallet, Loader2 } from "lucide-react";
 import { useWallet } from "@/contexts/WalletContext";
+import { useUser } from "@/contexts/UserContext";
+import StellarKitConnectButton from "@/components/StellarKitConnectButton";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { connectMetaMask, connectWalletConnect, isConnecting } = useWallet();
+  const { isConnected } = useWallet();
+  const { user, isLoaded } = useUser();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  useEffect(() => {
+    if (isConnected && isLoaded) {
+      if (user.isProfileComplete) {
+        navigate("/dashboard", { replace: true });
+      } else {
+        navigate("/dashboard/profile", { replace: true });
+      }
+    }
+  }, [isConnected, isLoaded, user.isProfileComplete, navigate]);
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/dashboard");
-  };
-
-  const handleWalletLogin = async (method: "metamask" | "walletconnect") => {
-    if (method === "metamask") {
-      await connectMetaMask();
-    } else {
-      await connectWalletConnect();
-    }
     navigate("/dashboard");
   };
 
@@ -42,31 +45,13 @@ const Login = () => {
 
         <div className="glass rounded-2xl p-8">
           {/* Wallet Login */}
-          <div className="space-y-3 mb-6">
-            <button
-              onClick={() => handleWalletLogin("metamask")}
-              disabled={isConnecting}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border border-border bg-muted/50 text-sm font-medium hover:bg-muted hover:border-primary/30 transition-all disabled:opacity-50"
-            >
-              {isConnecting ? (
-                <Loader2 size={18} className="text-primary animate-spin" />
-              ) : (
-                <span className="text-lg">🦊</span>
-              )}
-              Login with MetaMask
-            </button>
-            <button
-              onClick={() => handleWalletLogin("walletconnect")}
-              disabled={isConnecting}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border border-border bg-muted/50 text-sm font-medium hover:bg-muted hover:border-primary/30 transition-all disabled:opacity-50"
-            >
-              {isConnecting ? (
-                <Loader2 size={18} className="text-primary animate-spin" />
-              ) : (
-                <Wallet size={18} className="text-primary" />
-              )}
-              Login with WalletConnect
-            </button>
+          <div className="mb-6">
+            <div className="w-full rounded-xl border border-border bg-muted/50 px-4 py-4 text-sm">
+              <p className="text-xs text-muted-foreground mb-3 text-center">Log in with a Stellar wallet (Stellar Wallets Kit)</p>
+              <div className="flex min-h-[48px] w-full items-center justify-center [&_button]:max-w-full">
+                <StellarKitConnectButton className="w-full flex justify-center" />
+              </div>
+            </div>
           </div>
 
           <div className="flex items-center gap-4 mb-6">

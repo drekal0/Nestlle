@@ -4,7 +4,7 @@ const steps = [
   {
     number: "01",
     title: "Connect Your Wallet",
-    description: "Sign in with your Web3 wallet or use Web2 onboarding for an easy start.",
+    description: "Sign in with your Stellar wallet (Stellar Wallets Kit) or use email onboarding for an easy start.",
   },
   {
     number: "02",
@@ -14,7 +14,7 @@ const steps = [
   {
     number: "03",
     title: "Earn & Build Reputation",
-    description: "Earn XP, achievement badges, and proof-of-participation NFTs.",
+    description: "Earn XP, achievement badges, and proof-of-participation on Stellar.",
   },
   {
     number: "04",

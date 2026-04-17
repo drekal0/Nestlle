@@ -17,7 +17,7 @@ const features = [
   {
     icon: Brain,
     title: "Knowledge & Quiz Layer",
-    description: "Learn → Participate → Earn. Create quizzes tied to protocols, culture, or onboarding with proof-of-knowledge NFTs.",
+    description: "Learn → Participate → Earn. Create quizzes tied to protocols, culture, or onboarding with proof-of-knowledge badges on Stellar.",
     accent: "primary",
   },
   {
@@ -35,7 +35,7 @@ const features = [
   {
     icon: Shield,
     title: "On-Chain Trust",
-    description: "Wallet identity, soulbound badges, verifiable completions, and portable reputation across Web3 ecosystems.",
+    description: "Stellar wallet identity, verifiable badges, completed tasks, and portable reputation anchored on the Stellar network.",
     accent: "accent",
   },
 ];
