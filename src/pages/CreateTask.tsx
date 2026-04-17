@@ -2,18 +2,29 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
+import { useTasks } from "@/contexts/TaskContext";
 
 const CreateTask = () => {
   const navigate = useNavigate();
+  const { addTask } = useTasks();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [reward, setReward] = useState("");
-  const [rewardType, setRewardType] = useState("xp");
-  const [taskType, setTaskType] = useState("social");
+  const [rewardType, setRewardType] = useState<"xp" | "badge">("xp");
+  const [taskType, setTaskType] = useState<"social" | "onchain" | "educational" | "custom">("social");
   const [timeLimit, setTimeLimit] = useState("");
 
   const handlePublish = (e: React.FormEvent) => {
     e.preventDefault();
+    addTask({
+      title,
+      description,
+      fullDescription: description,
+      reward,
+      rewardType,
+      type: taskType,
+      timeLimit: timeLimit || undefined
+    });
     navigate("/admin/manage-tasks");
   };
 
@@ -62,7 +73,7 @@ const CreateTask = () => {
                 <label className="text-sm font-medium mb-1.5 block">Reward Type</label>
                 <select
                   value={rewardType}
-                  onChange={(e) => setRewardType(e.target.value)}
+                  onChange={(e) => setRewardType(e.target.value as "xp" | "badge")}
                   className="w-full px-4 py-3 rounded-lg bg-muted border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
                 >
                   <option value="xp">XP</option>
@@ -76,7 +87,7 @@ const CreateTask = () => {
                 <label className="text-sm font-medium mb-1.5 block">Task Type</label>
                 <select
                   value={taskType}
-                  onChange={(e) => setTaskType(e.target.value)}
+                  onChange={(e) => setTaskType(e.target.value as "social" | "onchain" | "educational" | "custom")}
                   className="w-full px-4 py-3 rounded-lg bg-muted border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
                 >
                   <option value="social">Social</option>

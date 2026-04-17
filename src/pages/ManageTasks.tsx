@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import { mockTasks } from "@/data/mockData";
+import { useTasks } from "@/contexts/TaskContext";
 
 const ManageTasks = () => {
+  const { tasks } = useTasks();
+
   return (
     <DashboardLayout variant="admin">
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
@@ -29,7 +31,7 @@ const ManageTasks = () => {
             <span className="text-center">Reward</span>
           </div>
 
-          {mockTasks.map((task, i) => (
+          {tasks.map((task, i) => (
             <motion.div
               key={task.id}
               initial={{ opacity: 0 }}
@@ -38,9 +40,8 @@ const ManageTasks = () => {
             >
               <Link
                 to={`/dashboard/tasks/${task.id}`}
-                className={`grid grid-cols-[1fr_120px_120px_100px] gap-4 px-6 py-5 items-center hover:bg-muted/30 transition-colors ${
-                  i < mockTasks.length - 1 ? "border-b border-border/50" : ""
-                }`}
+                className={`grid grid-cols-[1fr_120px_120px_100px] gap-4 px-6 py-5 items-center hover:bg-muted/30 transition-colors ${i < tasks.length - 1 ? "border-b border-border/50" : ""
+                  }`}
               >
                 <div>
                   <p className="font-medium">{task.title}</p>
@@ -48,11 +49,10 @@ const ManageTasks = () => {
                 </div>
                 <p className="text-center text-sm">{task.participants}</p>
                 <div className="flex justify-center">
-                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
-                    task.status === "completed"
-                      ? "bg-green-500/15 text-green-400"
-                      : "bg-primary/15 text-primary"
-                  }`}>
+                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${task.status === "completed"
+                    ? "bg-green-500/15 text-green-400"
+                    : "bg-primary/15 text-primary"
+                    }`}>
                     {task.status === "completed" ? "Completed" : "Active"}
                   </span>
                 </div>

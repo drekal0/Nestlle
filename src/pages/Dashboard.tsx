@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import { currentUser, mockTasks, mockActivities } from "@/data/mockData";
+import { currentUser, mockActivities } from "@/data/mockData";
+import { useTasks } from "@/contexts/TaskContext";
+import { useUser } from "@/contexts/UserContext";
 
 const Dashboard = () => {
-  const featuredTasks = mockTasks.filter((t) => t.status !== "completed").slice(0, 3);
+  const { tasks } = useTasks();
+  const { user } = useUser();
+  const featuredTasks = tasks.filter((t) => !user.completedTaskIds.includes(t.id!)).slice(0, 3);
   const xpPercent = (currentUser.xp / currentUser.maxXp) * 100;
 
   return (
@@ -81,11 +85,10 @@ const Dashboard = () => {
                   <h4 className="font-medium">{task.title}</h4>
                   <p className="text-sm text-muted-foreground mt-1">{task.description}</p>
                 </div>
-                <span className={`text-xs font-medium px-3 py-1 rounded-full shrink-0 ml-4 ${
-                  task.rewardType === "badge"
+                <span className={`text-xs font-medium px-3 py-1 rounded-full shrink-0 ml-4 ${task.rewardType === "badge"
                     ? "bg-accent/15 text-accent"
                     : "bg-primary/15 text-primary"
-                }`}>
+                  }`}>
                   {task.reward}
                 </span>
               </Link>

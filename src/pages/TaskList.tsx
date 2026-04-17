@@ -2,16 +2,20 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import { mockTasks } from "@/data/mockData";
+import { useTasks } from "@/contexts/TaskContext";
+import { useUser } from "@/contexts/UserContext";
 
 type Filter = "all" | "active" | "completed";
 
 const TaskList = () => {
   const [filter, setFilter] = useState<Filter>("all");
+  const { tasks } = useTasks();
+  const { user } = useUser();
 
-  const filtered = mockTasks.filter((t) => {
-    if (filter === "active") return t.status !== "completed";
-    if (filter === "completed") return t.status === "completed";
+  const filtered = tasks.filter((t) => {
+    const isCompleted = user.completedTaskIds.includes(t.id!);
+    if (filter === "active") return !isCompleted;
+    if (filter === "completed") return isCompleted;
     return true;
   });
 
@@ -27,11 +31,10 @@ const TaskList = () => {
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium capitalize transition-colors ${
-                filter === f
+              className={`px-4 py-2 rounded-lg text-sm font-medium capitalize transition-colors ${filter === f
                   ? "bg-primary text-primary-foreground"
                   : "bg-muted text-muted-foreground hover:text-foreground"
-              }`}
+                }`}
             >
               {f}
             </button>
@@ -52,28 +55,25 @@ const TaskList = () => {
                 className="glass rounded-xl p-6 block hover:border-primary/30 transition-colors h-full"
               >
                 <div className="flex items-start justify-between mb-3">
-                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full capitalize ${
-                    task.type === "social" ? "bg-blue-500/15 text-blue-400" :
-                    task.type === "onchain" ? "bg-green-500/15 text-green-400" :
-                    task.type === "educational" ? "bg-accent/15 text-accent" :
-                    "bg-muted text-muted-foreground"
-                  }`}>
+                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full capitalize ${task.type === "social" ? "bg-blue-500/15 text-blue-400" :
+                      task.type === "onchain" ? "bg-green-500/15 text-green-400" :
+                        task.type === "educational" ? "bg-accent/15 text-accent" :
+                          "bg-muted text-muted-foreground"
+                    }`}>
                     {task.type}
                   </span>
-                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
-                    task.status === "completed"
+                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${user.completedTaskIds.includes(task.id!)
                       ? "bg-green-500/15 text-green-400"
                       : "bg-muted text-muted-foreground"
-                  }`}>
-                    {task.status === "completed" ? "Completed" : "Not Started"}
+                    }`}>
+                    {user.completedTaskIds.includes(task.id!) ? "Completed" : "Not Started"}
                   </span>
                 </div>
                 <h3 className="font-display text-lg font-semibold mb-2">{task.title}</h3>
                 <p className="text-sm text-muted-foreground mb-4">{task.description}</p>
                 <div className="flex items-center justify-between">
-                  <span className={`text-sm font-medium ${
-                    task.rewardType === "badge" ? "text-accent" : "text-primary"
-                  }`}>
+                  <span className={`text-sm font-medium ${task.rewardType === "badge" ? "text-accent" : "text-primary"
+                    }`}>
                     {task.reward}
                   </span>
                   <span className="text-xs text-muted-foreground">
