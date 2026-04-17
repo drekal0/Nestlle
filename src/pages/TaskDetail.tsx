@@ -5,18 +5,24 @@ import { ArrowLeft, Clock, Users, Trophy, CheckCircle2, Heart, Award } from "luc
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import TipCreatorModal from "@/components/TipCreatorModal";
 import ClaimBadgeModal from "@/components/ClaimBadgeModal";
-import { mockTasks } from "@/data/mockData";
+import { useTasks } from "@/contexts/TaskContext";
 import { useWallet } from "@/contexts/WalletContext";
+import { useUser } from "@/contexts/UserContext";
+import { toast } from "sonner";
 
 const TaskDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const task = mockTasks.find((t) => t.id === id);
-  const [status, setStatus] = useState(task?.status || "not_started");
+  const { tasks } = useTasks();
+  const { user, completeTask } = useUser();
+  const task = tasks.find((t) => t.id === id);
+  const isCurrentlyCompleted = user.completedTaskIds.includes(id!);
+  const [status, setStatus] = useState(isCurrentlyCompleted ? "completed" : "not_started");
   const [showSuccess, setShowSuccess] = useState(false);
   const [showTip, setShowTip] = useState(false);
   const [showClaimBadge, setShowClaimBadge] = useState(false);
-  const { isConnected } = useWallet();
+  const [isVerifying, setIsVerifying] = useState(false);
+  const { isConnected, address } = useWallet();
 
   if (!task) {
     return (
@@ -28,9 +34,48 @@ const TaskDetail = () => {
   }
 
   const handleStart = () => setStatus("in_progress");
+
+  const extractXp = (rewardStr: string) => {
+    const num = parseInt(rewardStr.replace(/\D/g, ""));
+    return isNaN(num) ? 0 : num;
+  };
+
   const handleComplete = () => {
+    if (task) {
+      completeTask(task.id, extractXp(task.reward));
+    }
     setStatus("completed");
     setShowSuccess(true);
+    toast.success("Task finished!");
+  };
+
+  const handleVerify = async () => {
+    if (!address) return;
+    setIsVerifying(true);
+    try {
+      const res = await fetch(`https://horizon.stellar.org/accounts/${address}/operations?limit=50&order=desc`);
+      const data = await res.json();
+
+      if (!data._embedded || !data._embedded.records) {
+        toast.error("Could not fetch Stellar history.");
+        setIsVerifying(false);
+        return;
+      }
+
+      const hasSwap = data._embedded.records.some(
+        (op: any) => op.type === "path_payment_strict_receive" || op.type === "path_payment_strict_send"
+      );
+
+      if (hasSwap) {
+        handleComplete();
+      } else {
+        toast.error("No recent swaps found on this wallet address.");
+      }
+    } catch (err) {
+      toast.error("Stellar network verification failed.");
+    } finally {
+      setIsVerifying(false);
+    }
   };
 
   return (
@@ -55,11 +100,10 @@ const TaskDetail = () => {
               <div className="text-6xl mb-4">🎉</div>
               <h2 className="font-display text-2xl font-bold mb-2">Task Completed!</h2>
               <p className="text-muted-foreground mb-4">You've earned your reward</p>
-              <div className={`inline-flex items-center gap-2 px-6 py-3 rounded-full text-lg font-semibold ${
-                task.rewardType === "badge"
-                  ? "bg-accent/15 text-accent glow-gold"
-                  : "bg-primary/15 text-primary glow-primary"
-              }`}>
+              <div className={`inline-flex items-center gap-2 px-6 py-3 rounded-full text-lg font-semibold ${task.rewardType === "badge"
+                ? "bg-accent/15 text-accent glow-gold"
+                : "bg-primary/15 text-primary glow-primary"
+                }`}>
                 <Trophy size={20} />
                 {task.reward}
               </div>
@@ -106,19 +150,17 @@ const TaskDetail = () => {
             <motion.div key="detail" initial={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <div className="glass rounded-2xl p-8 max-w-2xl">
                 <div className="flex items-start justify-between mb-4">
-                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full capitalize ${
-                    task.type === "social" ? "bg-blue-500/15 text-blue-400" :
+                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full capitalize ${task.type === "social" ? "bg-blue-500/15 text-blue-400" :
                     task.type === "onchain" ? "bg-green-500/15 text-green-400" :
-                    task.type === "educational" ? "bg-accent/15 text-accent" :
-                    "bg-muted text-muted-foreground"
-                  }`}>
+                      task.type === "educational" ? "bg-accent/15 text-accent" :
+                        "bg-muted text-muted-foreground"
+                    }`}>
                     {task.type}
                   </span>
-                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
-                    status === "completed" ? "bg-green-500/15 text-green-400" :
+                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${status === "completed" ? "bg-green-500/15 text-green-400" :
                     status === "in_progress" ? "bg-primary/15 text-primary" :
-                    "bg-muted text-muted-foreground"
-                  }`}>
+                      "bg-muted text-muted-foreground"
+                    }`}>
                     {status === "completed" ? "Completed" : status === "in_progress" ? "In Progress" : "Not Started"}
                   </span>
                 </div>
@@ -162,13 +204,23 @@ const TaskDetail = () => {
                       Start Task
                     </button>
                   )}
-                  {status === "in_progress" && (
+                  {status === "in_progress" && task.type !== "onchain" && (
                     <button
                       onClick={handleComplete}
                       className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity glow-primary flex items-center gap-2"
                     >
                       <CheckCircle2 size={18} />
                       Mark as Completed
+                    </button>
+                  )}
+                  {status === "in_progress" && task.type === "onchain" && (
+                    <button
+                      onClick={handleVerify}
+                      disabled={isVerifying}
+                      className="px-6 py-3 rounded-lg bg-green-500 text-white font-medium hover:opacity-90 transition-opacity glow-primary flex items-center gap-2 disabled:opacity-50"
+                    >
+                      <CheckCircle2 size={18} />
+                      {isVerifying ? "Verifying On-Chain..." : "Verify On-Chain"}
                     </button>
                   )}
                   {status === "completed" && (
