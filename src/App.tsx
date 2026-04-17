@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { WalletProvider } from "@/contexts/WalletContext";
 import { UserProvider } from "@/contexts/UserContext";
+import { TaskProvider } from "@/contexts/TaskContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -21,30 +22,32 @@ import ManageTasks from "./pages/ManageTasks";
 const App = () => (
   <WalletProvider>
     <UserProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/login" element={<Login />} />
+      <TaskProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/login" element={<Login />} />
 
-            <Route element={<ProtectedRoute />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/dashboard/tasks" element={<TaskList />} />
-              <Route path="/dashboard/tasks/:id" element={<TaskDetail />} />
-              <Route path="/dashboard/leaderboard" element={<Leaderboard />} />
-              <Route path="/dashboard/profile" element={<Profile />} />
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/admin/create-task" element={<CreateTask />} />
-              <Route path="/admin/manage-tasks" element={<ManageTasks />} />
-            </Route>
+              <Route element={<ProtectedRoute />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/dashboard/tasks" element={<TaskList />} />
+                <Route path="/dashboard/tasks/:id" element={<TaskDetail />} />
+                <Route path="/dashboard/leaderboard" element={<Leaderboard />} />
+                <Route path="/dashboard/profile" element={<Profile />} />
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/create-task" element={<CreateTask />} />
+                <Route path="/admin/manage-tasks" element={<ManageTasks />} />
+              </Route>
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </TaskProvider>
     </UserProvider>
   </WalletProvider>
 );

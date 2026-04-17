@@ -3,15 +3,17 @@ import { motion } from "framer-motion";
 import { Wallet, Copy, Check, ExternalLink, Link2, Edit2, Save } from "lucide-react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import ClaimBadgeModal from "@/components/ClaimBadgeModal";
-import { mockActivities, mockTasks, currentUser as mockUser } from "@/data/mockData";
+import { mockActivities, currentUser as mockUser } from "@/data/mockData";
+import { useTasks } from "@/contexts/TaskContext";
 import { useWallet } from "@/contexts/WalletContext";
 import { useUser } from "@/contexts/UserContext";
 import StellarKitConnectButton from "@/components/StellarKitConnectButton";
 
 const Profile = () => {
-  const completedTasks = mockTasks.filter((t) => t.status === "completed");
-  const { isConnected, address, balance, shortenAddress, disconnect } = useWallet();
+  const { tasks } = useTasks();
   const { user, updateProfile } = useUser();
+  const completedTasks = tasks.filter((t) => user.completedTaskIds.includes(t.id!));
+  const { isConnected, address, balance, shortenAddress, disconnect } = useWallet();
 
   const [copied, setCopied] = useState(false);
   const [claimBadge, setClaimBadge] = useState<{ name: string; icon: string } | null>(null);

@@ -6,6 +6,8 @@ export interface UserProfile {
   email: string;
   avatar: string;
   isProfileComplete: boolean;
+  completedTaskIds: string[];
+  xp: number;
 }
 
 const defaultProfile: UserProfile = {
@@ -13,11 +15,14 @@ const defaultProfile: UserProfile = {
   email: "",
   avatar: "✨",
   isProfileComplete: false,
+  completedTaskIds: [],
+  xp: 0,
 };
 
 interface UserContextType {
   user: UserProfile;
   updateProfile: (data: Partial<UserProfile>) => void;
+  completeTask: (taskId: string, xpReward: number) => void;
   isLoaded: boolean;
 }
 
@@ -38,7 +43,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     if (isConnected && address) {
       const storageKey = `nestlle_user_${address}`;
       const saved = localStorage.getItem(storageKey);
-      
+
       if (saved) {
         try {
           setUser(JSON.parse(saved));
@@ -65,8 +70,24 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const completeTask = (taskId: string, xpReward: number) => {
+    if (!address) return;
+    setUser((prev) => {
+      // Prevent duplicate processing
+      if (prev.completedTaskIds.includes(taskId)) return prev;
+
+      const updated = {
+        ...prev,
+        completedTaskIds: [...prev.completedTaskIds, taskId],
+        xp: prev.xp + xpReward
+      };
+      localStorage.setItem(`nestlle_user_${address}`, JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   return (
-    <UserContext.Provider value={{ user, updateProfile, isLoaded }}>
+    <UserContext.Provider value={{ user, updateProfile, completeTask, isLoaded }}>
       {children}
     </UserContext.Provider>
   );
