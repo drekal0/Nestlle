@@ -16,6 +16,7 @@ import TaskList from "./pages/TaskList";
 import TaskDetail from "./pages/TaskDetail";
 import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/Profile";
+import CashOut from "./pages/CashOut";
 import AdminDashboard from "./pages/AdminDashboard";
 import CreateTask from "./pages/CreateTask";
 import ManageTasks from "./pages/ManageTasks";
@@ -36,6 +37,7 @@ const App = () => (
               <Route element={<ProtectedRoute />}>
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/dashboard/games" element={<Games />} />
+                <Route path="/dashboard/cashout" element={<CashOut />} />
                 <Route path="/dashboard/tasks" element={<TaskList />} />
                 <Route path="/dashboard/tasks/:id" element={<TaskDetail />} />
                 <Route path="/dashboard/leaderboard" element={<Leaderboard />} />
