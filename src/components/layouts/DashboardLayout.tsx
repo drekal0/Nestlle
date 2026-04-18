@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Home, ListChecks, Trophy, User, LogOut, LayoutDashboard, PlusCircle, Settings, Gamepad2, ShieldCheck, UserCircle } from "lucide-react";
 import WalletButton from "@/components/WalletButton";
+import { useUser } from "@/contexts/UserContext";
 
 const userLinks = [
   { label: "Home", href: "/dashboard", icon: Home },
@@ -25,6 +26,7 @@ interface DashboardLayoutProps {
 
 const DashboardLayout = ({ children, variant = "user" }: DashboardLayoutProps) => {
   const location = useLocation();
+  const { user } = useUser();
   const links = variant === "admin" ? adminLinks : userLinks;
 
   return (
@@ -59,22 +61,24 @@ const DashboardLayout = ({ children, variant = "user" }: DashboardLayoutProps) =
 
         {/* Role Switcher & Wallet */}
         <div className="p-4 border-t border-border space-y-3">
-          <Link
-            to={variant === "user" ? "/admin" : "/dashboard"}
-            className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium bg-accent/10 text-accent hover:bg-accent/20 transition-colors w-full"
-          >
-            {variant === "user" ? (
-              <>
-                <ShieldCheck size={18} />
-                Switch to Admin
-              </>
-            ) : (
-              <>
-                <UserCircle size={18} />
-                Switch to User
-              </>
-            )}
-          </Link>
+          {user.isAdmin && (
+            <Link
+              to={variant === "user" ? "/admin" : "/dashboard"}
+              className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium bg-accent/10 text-accent hover:bg-accent/20 transition-colors w-full"
+            >
+              {variant === "user" ? (
+                <>
+                  <ShieldCheck size={18} />
+                  Switch to Admin
+                </>
+              ) : (
+                <>
+                  <UserCircle size={18} />
+                  Switch to User
+                </>
+              )}
+            </Link>
+          )}
           <div className="pt-2">
             <WalletButton variant="compact" />
           </div>

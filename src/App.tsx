@@ -42,6 +42,9 @@ const App = () => (
                 <Route path="/dashboard/tasks/:id" element={<TaskDetail />} />
                 <Route path="/dashboard/leaderboard" element={<Leaderboard />} />
                 <Route path="/dashboard/profile" element={<Profile />} />
+              </Route>
+
+              <Route element={<ProtectedRoute requireAdmin />}>
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/admin/create-task" element={<CreateTask />} />
                 <Route path="/admin/manage-tasks" element={<ManageTasks />} />

@@ -1,14 +1,23 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useWallet } from "@/contexts/WalletContext";
+import { useUser } from "@/contexts/UserContext";
 
-const ProtectedRoute = () => {
+interface ProtectedRouteProps {
+    requireAdmin?: boolean;
+}
+
+const ProtectedRoute = ({ requireAdmin = false }: ProtectedRouteProps) => {
     const { isConnected } = useWallet();
+    const { isAdmin } = useUser();
 
     if (!isConnected) {
         return <Navigate to="/login" replace />;
     }
 
-    // Once connected, UserProvider handles loading user data and it's available via useUser()
+    if (requireAdmin && !isAdmin) {
+        return <Navigate to="/dashboard" replace />;
+    }
+
     return <Outlet />;
 };
 

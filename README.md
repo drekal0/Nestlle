@@ -1,35 +1,93 @@
-# Nestlle
+# 🦁 Nestlle: The Stellar Community Engagement Hub
 
-Nestlle is a **verifiable community engagement hub** built as a **Stellar-only** web app: users connect with [Stellar Wallets Kit](https://stellarwalletskit.dev), complete **tasks** (social, educational, Stellar on-chain, custom), earn **XP and badges**, climb a **leaderboard**, and support **creators** with **XLM tips** (demo flows today). **Culture and African heritage** are a core narrative in the marketing and sample content.
+Nestlle is a premium, **verifiable community engagement hub** built exclusively for the **Stellar Ecosystem**. It bridges the gap between community social action and on-chain rewards, creating a circular economy for creators, gamers, and developers.
 
-## Product surface (from the codebase)
+![Nestlle Banner](https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=1200)
 
-| Area | Purpose |
-|------|--------|
-| **Landing (`/`)** | Marketing: hero, features, creators, culture, how it works, CTA. |
-| **Auth (`/login`, `/signup`)** | Stellar wallet connect + email-style placeholders; wallet connect redirects when connected. |
-| **Dashboard** | User home: tasks, leaderboard, profile; much of the data is **mock** for prototyping. |
-| **Admin** | Create/manage tasks (admin routes). |
+## 🌟 Core Features
 
-## Tech stack
+### 🎮 Gaming & Quests hub
+- **Play-to-Earn**: Integrated gaming directory featuring Soroban-native titles.
+- **Dynamic Tasks**: Complete social, educational, and on-chain tasks to earn XP and badges.
+- **Leaderboards**: Real-time community rankings based on verifiable engagement.
 
-- **Vite + React + TypeScript**
-- **Tailwind CSS** + **shadcn/ui** (Radix)
-- **React Router**
-- **Stellar**: `@creit.tech/stellar-wallets-kit`, Horizon for **XLM** balance on public network
+### 🏦 Fiat Off-ramp (Linkio Integration)
+- **Direct-to-Bank**: seamlessly withdraw earned rewards to fiat via the **Linkio Global Bridge**.
+- **ACH/Domestic Support**: Secure bank transfers including routing and account verification.
+- **XP Swap**: Convert gaming XP into mintable USDC rewards instantly.
 
-There is **no EVM stack** in this repo (no `wagmi` / `viem` / RainbowKit).
+### 🛡️ Role-Based Access Control (RBAC)
+- **Whitelist Security**: Admin portal access is restricted to verified wallet addresses.
+- **Guarded Routes**: Professional route shielding for management and moderation panels.
+- **Admin Switcher**: Dynamic UI transitions between User and Admin views for authorized wallets.
 
-## Scripts
+### 💎 Stellar Integration
+- **Stellar Wallets Kit**: Unified support for Albedo, Freighter, Rabe, and xBull.
+- **Real-time Balances**: Live horizon-sync for XLM and custom assets (e.g., USDC).
+- **Social Tipping**: Support community leaders with instant XLM tips.
 
-```bash
-npm install
-npm run dev
-npm run build
-npm run lint
-npm test
-```
+---
 
-## Environment notes
+## 🛠️ Tech Stack
 
-- Wallet and balance use **public Stellar** (Horizon `horizon.stellar.org`). For testnet, you would point Horizon and kit network configuration accordingly.
+- **Core**: [Vite](https://vitejs.dev/) + [React](https://reactjs.org/) + [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/) (Glassmorphic Theme)
+- **Animation**: [Framer Motion](https://www.framer.com/motion/)
+- **Stellar SDK**: `@creit.tech/stellar-wallets-kit`
+- **Icons**: [Lucide React](https://lucide.dev/)
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v18+)
+- A Stellar wallet (Freighter, Albedo, etc.)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/dre2809/Nestlle.git
+   cd Nestlle
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+4. **Build for production**
+   ```bash
+   npm run build
+   ```
+
+---
+
+## 🔒 Security & RBAC
+
+Nestlle uses a decentralized identity model. To configure admin access:
+
+1. Locate `src/contexts/UserContext.tsx`.
+2. Update the `ADMIN_ADDRESSES` array with the public keys of authorized moderators.
+3. The platform will automatically unlock the Admin Dashboard for these users upon wallet connection.
+
+---
+
+## 🌍 Social & Culture
+
+Nestlle celebrates **African heritage and global community culture**. Our design system and content narratives are crafted to highlight the vibrancy of the Stellar community while maintaining a premium, "Apple-esque" user experience.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+Built with ⚡ on **Stellar**.

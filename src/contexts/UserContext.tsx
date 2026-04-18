@@ -8,7 +8,12 @@ export interface UserProfile {
   isProfileComplete: boolean;
   completedTaskIds: string[];
   xp: number;
+  isAdmin: boolean;
 }
+
+const ADMIN_ADDRESSES = [
+  "GC2F6C5P7A4Y6R4E3W2Q1P0O9I8U7Y6T5R4E3W2Q1P0O9I8U7Y6T5R4E", // Placeholder admin
+];
 
 const defaultProfile: UserProfile = {
   name: "Anonymous User",
@@ -17,6 +22,7 @@ const defaultProfile: UserProfile = {
   isProfileComplete: false,
   completedTaskIds: [],
   xp: 0,
+  isAdmin: false,
 };
 
 interface UserContextType {
@@ -24,6 +30,7 @@ interface UserContextType {
   updateProfile: (data: Partial<UserProfile>) => void;
   completeTask: (taskId: string, xpReward: number) => void;
   isLoaded: boolean;
+  isAdmin: boolean;
 }
 
 const UserContext = createContext<UserContextType | null>(null);
@@ -46,13 +53,14 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
       if (saved) {
         try {
-          setUser(JSON.parse(saved));
+          const profile = JSON.parse(saved);
+          setUser({ ...profile, isAdmin: ADMIN_ADDRESSES.includes(address) });
         } catch (e) {
           console.error("Failed to parse user profile from local storage");
-          setUser(defaultProfile);
+          setUser({ ...defaultProfile, isAdmin: ADMIN_ADDRESSES.includes(address) });
         }
       } else {
-        setUser(defaultProfile);
+        setUser({ ...defaultProfile, isAdmin: ADMIN_ADDRESSES.includes(address) });
       }
       setIsLoaded(true);
     } else {
@@ -87,7 +95,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, updateProfile, completeTask, isLoaded }}>
+    <UserContext.Provider value={{ user, updateProfile, completeTask, isLoaded, isAdmin: user.isAdmin }}>
       {children}
     </UserContext.Provider>
   );
