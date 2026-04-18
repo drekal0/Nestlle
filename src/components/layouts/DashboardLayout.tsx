@@ -1,13 +1,15 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, ListChecks, Trophy, User, LogOut, LayoutDashboard, PlusCircle, Settings, Gamepad2 } from "lucide-react";
+import { Home, ListChecks, Trophy, User, LogOut, LayoutDashboard, PlusCircle, Settings, Gamepad2, ShieldCheck, UserCircle } from "lucide-react";
 import WalletButton from "@/components/WalletButton";
+import { useUser } from "@/contexts/UserContext";
 
 const userLinks = [
   { label: "Home", href: "/dashboard", icon: Home },
   { label: "Games", href: "/dashboard/games", icon: Gamepad2 },
   { label: "Tasks", href: "/dashboard/tasks", icon: ListChecks },
   { label: "Leaderboard", href: "/dashboard/leaderboard", icon: Trophy },
+  { label: "Cash Out", href: "/dashboard/cashout", icon: LogOut },
   { label: "Profile", href: "/dashboard/profile", icon: User },
 ];
 
@@ -24,6 +26,7 @@ interface DashboardLayoutProps {
 
 const DashboardLayout = ({ children, variant = "user" }: DashboardLayoutProps) => {
   const location = useLocation();
+  const { user } = useUser();
   const links = variant === "admin" ? adminLinks : userLinks;
 
   return (
@@ -45,8 +48,8 @@ const DashboardLayout = ({ children, variant = "user" }: DashboardLayoutProps) =
                 key={link.href}
                 to={link.href}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${isActive
-                    ? "bg-primary/15 text-primary"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  ? "bg-primary/15 text-primary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                   }`}
               >
                 <link.icon size={18} />
@@ -56,18 +59,29 @@ const DashboardLayout = ({ children, variant = "user" }: DashboardLayoutProps) =
           })}
         </nav>
 
-        {/* Wallet in sidebar */}
-        <div className="p-4 border-t border-border">
-          <div className="mb-3">
+        {/* Role Switcher & Wallet */}
+        <div className="p-4 border-t border-border space-y-3">
+          {user.isAdmin && (
+            <Link
+              to={variant === "user" ? "/admin" : "/dashboard"}
+              className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium bg-accent/10 text-accent hover:bg-accent/20 transition-colors w-full"
+            >
+              {variant === "user" ? (
+                <>
+                  <ShieldCheck size={18} />
+                  Switch to Admin
+                </>
+              ) : (
+                <>
+                  <UserCircle size={18} />
+                  Switch to User
+                </>
+              )}
+            </Link>
+          )}
+          <div className="pt-2">
             <WalletButton variant="compact" />
           </div>
-          <Link
-            to="/"
-            className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-          >
-            <LogOut size={18} />
-            Logout
-          </Link>
         </div>
       </aside>
 
