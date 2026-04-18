@@ -11,7 +11,8 @@ const CreateTask = () => {
   const [description, setDescription] = useState("");
   const [reward, setReward] = useState("");
   const [rewardType, setRewardType] = useState<"xp" | "badge">("xp");
-  const [taskType, setTaskType] = useState<"social" | "onchain" | "educational" | "custom">("social");
+  const [taskType, setTaskType] = useState<"social" | "onchain" | "onchain_game" | "educational" | "custom">("social");
+  const [category, setCategory] = useState<"gaming" | "dev" | "design" | "content" | "community" | "general">("general");
   const [timeLimit, setTimeLimit] = useState("");
 
   const handlePublish = (e: React.FormEvent) => {
@@ -23,6 +24,7 @@ const CreateTask = () => {
       reward,
       rewardType,
       type: taskType,
+      category,
       timeLimit: timeLimit || undefined
     });
     navigate("/admin/manage-tasks");
@@ -87,11 +89,12 @@ const CreateTask = () => {
                 <label className="text-sm font-medium mb-1.5 block">Task Type</label>
                 <select
                   value={taskType}
-                  onChange={(e) => setTaskType(e.target.value as "social" | "onchain" | "educational" | "custom")}
+                  onChange={(e) => setTaskType(e.target.value as any)}
                   className="w-full px-4 py-3 rounded-lg bg-muted border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
                 >
                   <option value="social">Social</option>
-                  <option value="onchain">Stellar on-chain</option>
+                  <option value="onchain">Stellar Swap</option>
+                  <option value="onchain_game">Soroban Web3 Match</option>
                   <option value="educational">Educational</option>
                   <option value="custom">Custom</option>
                 </select>
@@ -106,6 +109,22 @@ const CreateTask = () => {
                   className="w-full px-4 py-3 rounded-lg bg-muted border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
                 />
               </div>
+            </div>
+
+            <div>
+              <label className="text-sm font-medium mb-1.5 block">Target Category</label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value as any)}
+                className="w-full px-4 py-3 rounded-lg bg-muted border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+              >
+                <option value="general">General</option>
+                <option value="gaming">🎮 Gaming</option>
+                <option value="dev">💻 Developers</option>
+                <option value="design">✨ Designers</option>
+                <option value="content">🎬 Content Creators</option>
+                <option value="community">🤝 Community</option>
+              </select>
             </div>
 
             <div className="flex gap-3 pt-4">

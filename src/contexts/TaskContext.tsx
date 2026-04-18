@@ -32,6 +32,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
 
     const addTask = (taskData: Omit<Task, "id" | "status" | "participants">) => {
         const newTask: Task = {
+            category: "general",
             ...taskData,
             id: Date.now().toString(),
             status: "not_started",

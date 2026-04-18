@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import Games from "./pages/Games";
 import TaskList from "./pages/TaskList";
 import TaskDetail from "./pages/TaskDetail";
 import Leaderboard from "./pages/Leaderboard";
@@ -34,6 +35,7 @@ const App = () => (
 
               <Route element={<ProtectedRoute />}>
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/dashboard/games" element={<Games />} />
                 <Route path="/dashboard/tasks" element={<TaskList />} />
                 <Route path="/dashboard/tasks/:id" element={<TaskDetail />} />
                 <Route path="/dashboard/leaderboard" element={<Leaderboard />} />

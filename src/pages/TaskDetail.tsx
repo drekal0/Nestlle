@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Clock, Users, Trophy, CheckCircle2, Heart, Award } from "lucide-react";
+import { ArrowLeft, Clock, Users, Trophy, CheckCircle2, Heart, Award, Gamepad2 } from "lucide-react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import TipCreatorModal from "@/components/TipCreatorModal";
 import ClaimBadgeModal from "@/components/ClaimBadgeModal";
@@ -9,6 +9,16 @@ import { useTasks } from "@/contexts/TaskContext";
 import { useWallet } from "@/contexts/WalletContext";
 import { useUser } from "@/contexts/UserContext";
 import { toast } from "sonner";
+
+const CATEGORIES = [
+  { id: "all", label: "All Sectors" },
+  { id: "gaming", label: "🎮 Gaming" },
+  { id: "dev", label: "💻 Devs" },
+  { id: "design", label: "✨ Design" },
+  { id: "content", label: "🎬 Creators" },
+  { id: "community", label: "🤝 Community" },
+  { id: "general", label: "🌐 General" },
+];
 
 const TaskDetail = () => {
   const { id } = useParams();
@@ -62,14 +72,25 @@ const TaskDetail = () => {
         return;
       }
 
-      const hasSwap = data._embedded.records.some(
-        (op: any) => op.type === "path_payment_strict_receive" || op.type === "path_payment_strict_send"
-      );
-
-      if (hasSwap) {
-        handleComplete();
+      if (task?.type === "onchain_game") {
+        const hasGameAction = data._embedded.records.some(
+          (op: any) => op.type_i === 24 || op.type === "invoke_host_function"
+        );
+        if (hasGameAction) {
+          handleComplete();
+        } else {
+          toast.error("No recent Web3 match activity found on this wallet.");
+        }
       } else {
-        toast.error("No recent swaps found on this wallet address.");
+        const hasSwap = data._embedded.records.some(
+          (op: any) => op.type === "path_payment_strict_receive" || op.type === "path_payment_strict_send"
+        );
+
+        if (hasSwap) {
+          handleComplete();
+        } else {
+          toast.error("No recent swaps found on this wallet address.");
+        }
       }
     } catch (err) {
       toast.error("Stellar network verification failed.");
@@ -150,13 +171,18 @@ const TaskDetail = () => {
             <motion.div key="detail" initial={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <div className="glass rounded-2xl p-8 max-w-2xl">
                 <div className="flex items-start justify-between mb-4">
-                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full capitalize ${task.type === "social" ? "bg-blue-500/15 text-blue-400" :
-                    task.type === "onchain" ? "bg-green-500/15 text-green-400" :
-                      task.type === "educational" ? "bg-accent/15 text-accent" :
-                        "bg-muted text-muted-foreground"
-                    }`}>
-                    {task.type}
-                  </span>
+                  <div className="flex gap-2">
+                    <span className={`text-xs font-medium px-2.5 py-1 rounded-full capitalize ${task.type === "social" ? "bg-blue-500/15 text-blue-400" :
+                      task.type === "onchain" ? "bg-green-500/15 text-green-400" :
+                        task.type === "educational" ? "bg-accent/15 text-accent" :
+                          "bg-muted text-muted-foreground"
+                      }`}>
+                      {task.type}
+                    </span>
+                    <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-secondary text-secondary-foreground border border-border">
+                      {CATEGORIES.find(c => c.id === (task.category || "general"))?.label || "General"}
+                    </span>
+                  </div>
                   <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${status === "completed" ? "bg-green-500/15 text-green-400" :
                     status === "in_progress" ? "bg-primary/15 text-primary" :
                       "bg-muted text-muted-foreground"
@@ -185,7 +211,7 @@ const TaskDetail = () => {
                   )}
                 </div>
 
-                {task.type === "onchain" && !isConnected && (
+                {(task.type === "onchain" || task.type === "onchain_game") && !isConnected && (
                   <div className="bg-accent/5 border border-accent/20 rounded-xl p-4 mb-6">
                     <p className="text-sm text-accent font-medium">⚠️ Stellar wallet required</p>
                     <p className="text-xs text-muted-foreground mt-1">
@@ -198,13 +224,13 @@ const TaskDetail = () => {
                   {status === "not_started" && (
                     <button
                       onClick={handleStart}
-                      disabled={task.type === "onchain" && !isConnected}
+                      disabled={(task.type === "onchain" || task.type === "onchain_game") && !isConnected}
                       className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity glow-primary disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Start Task
                     </button>
                   )}
-                  {status === "in_progress" && task.type !== "onchain" && (
+                  {status === "in_progress" && task.type !== "onchain" && task.type !== "onchain_game" && (
                     <button
                       onClick={handleComplete}
                       className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity glow-primary flex items-center gap-2"
@@ -221,6 +247,16 @@ const TaskDetail = () => {
                     >
                       <CheckCircle2 size={18} />
                       {isVerifying ? "Verifying On-Chain..." : "Verify On-Chain"}
+                    </button>
+                  )}
+                  {status === "in_progress" && task.type === "onchain_game" && (
+                    <button
+                      onClick={handleVerify}
+                      disabled={isVerifying}
+                      className="px-6 py-3 rounded-lg bg-accent text-accent-foreground font-medium hover:opacity-90 transition-opacity glow-gold flex items-center gap-2 disabled:opacity-50"
+                    >
+                      <Gamepad2 size={18} />
+                      {isVerifying ? "Verifying Play..." : "Verify Web3 Play"}
                     </button>
                   )}
                   {status === "completed" && (

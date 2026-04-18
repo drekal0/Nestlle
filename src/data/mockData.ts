@@ -6,7 +6,8 @@ export interface Task {
   reward: string;
   rewardType: "xp" | "badge";
   status: "not_started" | "in_progress" | "completed";
-  type: "social" | "onchain" | "educational" | "custom";
+  type: "social" | "onchain" | "onchain_game" | "educational" | "custom";
+  category?: "gaming" | "dev" | "design" | "content" | "community" | "general";
   participants: number;
   timeLimit?: string;
 }
@@ -46,6 +47,7 @@ export const mockTasks: Task[] = [
     rewardType: "xp",
     status: "not_started",
     type: "social",
+    category: "general",
     participants: 342,
     timeLimit: "7 days",
   },
@@ -58,6 +60,7 @@ export const mockTasks: Task[] = [
     rewardType: "badge",
     status: "not_started",
     type: "educational",
+    category: "dev",
     participants: 189,
   },
   {
@@ -69,6 +72,7 @@ export const mockTasks: Task[] = [
     rewardType: "xp",
     status: "not_started",
     type: "onchain",
+    category: "community",
     participants: 98,
     timeLimit: "14 days",
   },
@@ -81,6 +85,7 @@ export const mockTasks: Task[] = [
     rewardType: "xp",
     status: "completed",
     type: "social",
+    category: "gaming",
     participants: 567,
   },
   {
@@ -92,6 +97,7 @@ export const mockTasks: Task[] = [
     rewardType: "badge",
     status: "completed",
     type: "educational",
+    category: "general",
     participants: 234,
   },
   {
@@ -103,6 +109,7 @@ export const mockTasks: Task[] = [
     rewardType: "xp",
     status: "not_started",
     type: "custom",
+    category: "content",
     participants: 156,
     timeLimit: "30 days",
   },
