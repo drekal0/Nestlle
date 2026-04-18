@@ -1,17 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Wallet, Copy, Check, ExternalLink, Link2 } from "lucide-react";
+import { Wallet, Copy, Check, ExternalLink, Link2, Edit2, Save } from "lucide-react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import ClaimBadgeModal from "@/components/ClaimBadgeModal";
-import { currentUser, mockActivities, mockTasks } from "@/data/mockData";
+import { mockActivities, currentUser as mockUser } from "@/data/mockData";
+import { useTasks } from "@/contexts/TaskContext";
 import { useWallet } from "@/contexts/WalletContext";
+import { useUser } from "@/contexts/UserContext";
+import StellarKitConnectButton from "@/components/StellarKitConnectButton";
 
 const Profile = () => {
-  const completedTasks = mockTasks.filter((t) => t.status === "completed");
-  const xpPercent = (currentUser.xp / currentUser.maxXp) * 100;
-  const { isConnected, address, balance, ensName, shortenAddress, connectMetaMask, disconnect } = useWallet();
+  const { tasks } = useTasks();
+  const { user, updateProfile } = useUser();
+  const completedTasks = tasks.filter((t) => user.completedTaskIds.includes(t.id!));
+  const { isConnected, address, balance, shortenAddress, disconnect } = useWallet();
+
   const [copied, setCopied] = useState(false);
   const [claimBadge, setClaimBadge] = useState<{ name: string; icon: string } | null>(null);
+
+  const [isEditing, setIsEditing] = useState(!user.isProfileComplete);
+  const [editName, setEditName] = useState(user.name);
+  const [editEmail, setEditEmail] = useState(user.email);
+  const [editAvatar, setEditAvatar] = useState(user.avatar);
+
+  // Sync state if user changes externally
+  useEffect(() => {
+    setIsEditing(!user.isProfileComplete);
+    setEditName(user.name);
+    setEditEmail(user.email);
+    setEditAvatar(user.avatar);
+  }, [user]);
+
+  const handleSaveProfile = () => {
+    updateProfile({
+      name: editName,
+      email: editEmail,
+      avatar: editAvatar,
+      isProfileComplete: true,
+    });
+    setIsEditing(false);
+  };
+
+  const xpPercent = (mockUser.xp / mockUser.maxXp) * 100;
 
   const handleCopy = () => {
     if (address) {
@@ -25,26 +55,75 @@ const Profile = () => {
     <DashboardLayout>
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
         {/* Profile Header */}
-        <div className="glass rounded-2xl p-8 mb-6">
-          <div className="flex items-center gap-6">
-            <div className="w-20 h-20 rounded-full bg-primary/15 flex items-center justify-center text-4xl">
-              {currentUser.avatar}
+        <div className="glass rounded-2xl p-8 mb-6 relative">
+          {isConnected && (
+            <button
+              onClick={() => setIsEditing(!isEditing)}
+              className="absolute top-6 right-6 p-2 rounded-lg bg-muted text-muted-foreground hover:text-foreground transition-all"
+            >
+              <Edit2 size={18} />
+            </button>
+          )}
+
+          {isEditing ? (
+            <div className="space-y-4 max-w-md">
+              <h2 className="font-display text-xl font-bold mb-4">Complete your Profile</h2>
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Avatar (Emoji)</label>
+                <input
+                  type="text"
+                  value={editAvatar}
+                  onChange={(e) => setEditAvatar(e.target.value)}
+                  className="w-20 px-4 py-2 text-center text-2xl rounded-lg bg-muted border border-border text-foreground focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Name</label>
+                <input
+                  type="text"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg bg-muted border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Email</label>
+                <input
+                  type="email"
+                  value={editEmail}
+                  onChange={(e) => setEditEmail(e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg bg-muted border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                />
+              </div>
+              <button
+                onClick={handleSaveProfile}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity mt-4"
+              >
+                <Save size={16} />
+                Save Profile
+              </button>
             </div>
-            <div className="flex-1">
-              <h1 className="font-display text-2xl font-bold">{currentUser.name}</h1>
-              <p className="text-muted-foreground text-sm">{currentUser.email}</p>
-              <div className="flex gap-4 mt-2">
-                <span className="text-sm">Level <strong className="text-primary">{currentUser.level}</strong></span>
-                <span className="text-sm">Rank <strong className="text-accent">#{currentUser.rank}</strong></span>
+          ) : (
+            <div className="flex items-center gap-6">
+              <div className="w-20 h-20 rounded-full bg-primary/15 flex items-center justify-center text-4xl">
+                {user.avatar}
+              </div>
+              <div className="flex-1">
+                <h1 className="font-display text-2xl font-bold">{user.name}</h1>
+                <p className="text-muted-foreground text-sm">{user.email}</p>
+                <div className="flex gap-4 mt-2">
+                  <span className="text-sm">Level <strong className="text-primary">{mockUser.level}</strong></span>
+                  <span className="text-sm">Rank <strong className="text-accent">#{mockUser.rank}</strong></span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* XP Bar */}
           <div className="mt-6">
             <div className="flex justify-between text-sm mb-2">
               <span className="text-muted-foreground">XP Progress</span>
-              <span className="text-muted-foreground">{currentUser.xp} / {currentUser.maxXp}</span>
+              <span className="text-muted-foreground">{mockUser.xp} / {mockUser.maxXp}</span>
             </div>
             <div className="w-full h-3 bg-muted rounded-full overflow-hidden">
               <motion.div
@@ -71,13 +150,12 @@ const Profile = () => {
                 <div>
                   <p className="text-xs text-muted-foreground mb-1">Connected Address</p>
                   <div className="flex items-center gap-2">
-                    {ensName && <span className="text-sm font-medium text-accent">{ensName}</span>}
                     <span className="font-mono text-sm">{shortenAddress(address)}</span>
                     <button onClick={handleCopy} className="text-muted-foreground hover:text-foreground transition-colors">
                       {copied ? <Check size={14} className="text-green-400" /> : <Copy size={14} />}
                     </button>
                     <a
-                      href={`https://etherscan.io/address/${address}`}
+                      href={`https://stellar.expert/explorer/public/account/${address}`}
                       target="_blank"
                       rel="noreferrer"
                       className="text-muted-foreground hover:text-foreground transition-colors"
@@ -88,7 +166,7 @@ const Profile = () => {
                 </div>
                 <div className="text-right">
                   <p className="text-xs text-muted-foreground mb-1">Balance</p>
-                  <p className="font-display font-bold">{balance} ETH</p>
+                  <p className="font-display font-bold">{balance} XLM</p>
                 </div>
               </div>
 
@@ -107,15 +185,11 @@ const Profile = () => {
                 <Link2 size={28} className="text-primary" />
               </div>
               <p className="text-sm text-muted-foreground mb-4">
-                Link your wallet to claim NFT badges, tip creators, and verify on-chain tasks
+                Link your Stellar wallet to claim badges, tip creators, and verify Stellar-network tasks
               </p>
-              <button
-                onClick={connectMetaMask}
-                className="px-6 py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity"
-              >
-                <Wallet size={16} className="inline mr-2" />
-                Connect Wallet
-              </button>
+              <div className="mx-auto max-w-xs rounded-xl border border-primary/30 bg-muted/20 p-3 [&_button]:max-w-full">
+                <StellarKitConnectButton className="flex w-full justify-center" />
+              </div>
             </div>
           )}
         </div>
@@ -125,7 +199,7 @@ const Profile = () => {
           <div>
             <h3 className="font-display text-lg font-semibold mb-4">Achievements</h3>
             <div className="grid grid-cols-2 gap-3">
-              {currentUser.badges.map((badge) => (
+              {mockUser.badges.map((badge) => (
                 <div key={badge.id} className="glass rounded-xl p-4 text-center group relative">
                   <span className="text-3xl">{badge.icon}</span>
                   <p className="font-medium text-sm mt-2">{badge.name}</p>
@@ -135,7 +209,7 @@ const Profile = () => {
                       onClick={() => setClaimBadge({ name: badge.name, icon: badge.icon })}
                       className="mt-2 text-xs text-primary hover:underline font-medium"
                     >
-                      Claim as NFT
+                      Claim badge
                     </button>
                   )}
                 </div>

@@ -6,7 +6,8 @@ export interface Task {
   reward: string;
   rewardType: "xp" | "badge";
   status: "not_started" | "in_progress" | "completed";
-  type: "social" | "onchain" | "educational" | "custom";
+  type: "social" | "onchain" | "onchain_game" | "educational" | "custom";
+  category?: "gaming" | "dev" | "design" | "content" | "community" | "general";
   participants: number;
   timeLimit?: string;
 }
@@ -46,29 +47,32 @@ export const mockTasks: Task[] = [
     rewardType: "xp",
     status: "not_started",
     type: "social",
+    category: "general",
     participants: 342,
     timeLimit: "7 days",
   },
   {
     id: "2",
-    title: "Complete Web3 Basics Quiz",
-    description: "Test your knowledge of blockchain fundamentals.",
-    fullDescription: "Take a 10-question quiz covering blockchain fundamentals including consensus mechanisms, smart contracts, and wallet security. Score 80% or higher to earn the Knowledge Badge. You can retake the quiz up to 3 times.",
+    title: "Complete Stellar Basics Quiz",
+    description: "Test your knowledge of the Stellar network and wallets.",
+    fullDescription: "Take a 10-question quiz covering Stellar fundamentals: accounts, trustlines, assets, consensus (SCP), and safe wallet practices. Score 80% or higher to earn the Knowledge Badge. You can retake the quiz up to 3 times.",
     reward: "Knowledge Badge",
     rewardType: "badge",
     status: "not_started",
     type: "educational",
+    category: "dev",
     participants: 189,
   },
   {
     id: "3",
-    title: "Swap tokens on Uniswap",
-    description: "Perform a token swap on Uniswap to verify on-chain activity.",
-    fullDescription: "Connect your wallet and perform any token swap on Uniswap (any chain). The transaction will be verified on-chain automatically. Minimum swap value: $1. This task demonstrates your ability to interact with DeFi protocols.",
+    title: "Swap on a Stellar DEX",
+    description: "Perform an asset swap on a Stellar decentralized exchange.",
+    fullDescription: "Use your Stellar wallet to perform any legitimate swap on a Stellar DEX (e.g. liquidity pool or order book UI). The transaction will be verified on the public network. Minimum notional value: $1 equivalent. This task shows you can move value on Stellar.",
     reward: "100 XP",
     rewardType: "xp",
     status: "not_started",
     type: "onchain",
+    category: "community",
     participants: 98,
     timeLimit: "14 days",
   },
@@ -76,11 +80,12 @@ export const mockTasks: Task[] = [
     id: "4",
     title: "Join Discord Community",
     description: "Join our Discord server and introduce yourself in #introductions.",
-    fullDescription: "Join the Nestlle Discord server using the invite link provided. Post a brief introduction in the #introductions channel including your interests in Web3. React to at least 3 posts in any channel to complete the task.",
+    fullDescription: "Join the Nestlle Discord server using the invite link provided. Post a brief introduction in the #introductions channel including your interests in Stellar or community tasks. React to at least 3 posts in any channel to complete the task.",
     reward: "30 XP",
     rewardType: "xp",
     status: "completed",
     type: "social",
+    category: "gaming",
     participants: 567,
   },
   {
@@ -92,17 +97,19 @@ export const mockTasks: Task[] = [
     rewardType: "badge",
     status: "completed",
     type: "educational",
+    category: "general",
     participants: 234,
   },
   {
     id: "6",
     title: "Create a Community Post",
-    description: "Share your Web3 journey or a creative piece with the community.",
-    fullDescription: "Create an original post sharing your Web3 journey, a piece of digital art, or a creative writing piece related to blockchain culture. Posts will be reviewed by moderators. Quality submissions may be featured on the platform.",
+    description: "Share your Stellar journey or a creative piece with the community.",
+    fullDescription: "Create an original post sharing your Stellar journey, a piece of digital art, or a creative writing piece related to community or culture on chain. Posts will be reviewed by moderators. Quality submissions may be featured on the platform.",
     reward: "75 XP",
     rewardType: "xp",
     status: "not_started",
     type: "custom",
+    category: "content",
     participants: 156,
     timeLimit: "30 days",
   },
@@ -110,15 +117,15 @@ export const mockTasks: Task[] = [
 
 export const mockLeaderboard: LeaderboardUser[] = [
   { id: "u1", rank: 1, name: "CryptoNomad", avatar: "🦁", xp: 4520, level: 12, badges: 8 },
-  { id: "u2", rank: 2, name: "BlockchainBee", avatar: "🐝", xp: 4100, level: 11, badges: 7 },
-  { id: "u3", rank: 3, name: "Web3Warrior", avatar: "⚔️", xp: 3800, level: 10, badges: 6 },
-  { id: "u4", rank: 4, name: "DeFiDiva", avatar: "💎", xp: 3450, level: 9, badges: 6 },
-  { id: "u5", rank: 5, name: "NFTNinja", avatar: "🥷", xp: 3200, level: 9, badges: 5 },
+  { id: "u2", rank: 2, name: "StellarBee", avatar: "🐝", xp: 4100, level: 11, badges: 7 },
+  { id: "u3", rank: 3, name: "LumenLegend", avatar: "⚔️", xp: 3800, level: 10, badges: 6 },
+  { id: "u4", rank: 4, name: "PoolPioneer", avatar: "💎", xp: 3450, level: 9, badges: 6 },
+  { id: "u5", rank: 5, name: "BadgeBandit", avatar: "🥷", xp: 3200, level: 9, badges: 5 },
   { id: "u6", rank: 6, name: "TokenTiger", avatar: "🐯", xp: 2900, level: 8, badges: 5 },
   { id: "u7", rank: 7, name: "ChainChamp", avatar: "🏆", xp: 2650, level: 7, badges: 4 },
   { id: "current", rank: 8, name: "You", avatar: "🚀", xp: 2400, level: 7, badges: 4 },
   { id: "u9", rank: 9, name: "MetaMaster", avatar: "🧙", xp: 2100, level: 6, badges: 3 },
-  { id: "u10", rank: 10, name: "EtherEagle", avatar: "🦅", xp: 1800, level: 5, badges: 3 },
+  { id: "u10", rank: 10, name: "SorobanStar", avatar: "🦅", xp: 1800, level: 5, badges: 3 },
 ];
 
 export const mockBadges: Badge[] = [

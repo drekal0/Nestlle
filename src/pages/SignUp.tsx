@@ -1,28 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Wallet, Mail, Loader2 } from "lucide-react";
+import { Mail } from "lucide-react";
 import { useWallet } from "@/contexts/WalletContext";
+import { useUser } from "@/contexts/UserContext";
+import StellarKitConnectButton from "@/components/StellarKitConnectButton";
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const { connectMetaMask, connectWalletConnect, isConnected, isConnecting, address, shortenAddress } = useWallet();
+  const { isConnected, address, shortenAddress } = useWallet();
+  const { user, isLoaded } = useUser();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  useEffect(() => {
+    if (isConnected && isLoaded) {
+      if (user.isProfileComplete) {
+        navigate("/dashboard", { replace: true });
+      } else {
+        navigate("/dashboard/profile", { replace: true });
+      }
+    }
+  }, [isConnected, isLoaded, user.isProfileComplete, navigate]);
+
   const handleSignUp = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/dashboard");
-  };
-
-  const handleWalletSignUp = async (method: "metamask" | "walletconnect") => {
-    if (method === "metamask") {
-      await connectMetaMask();
-    } else {
-      await connectWalletConnect();
-    }
-    // After connection, navigate to dashboard
     navigate("/dashboard");
   };
 
@@ -39,35 +42,19 @@ const SignUp = () => {
             Nestlle
           </Link>
           <h1 className="font-display text-2xl font-bold mt-6">Create your account</h1>
-          <p className="text-muted-foreground text-sm mt-2">Join the Web3 engagement revolution</p>
+          <p className="text-muted-foreground text-sm mt-2">Join the Stellar engagement community</p>
         </div>
 
         <div className="glass rounded-2xl p-8">
           <div className="space-y-3 mb-6">
-            <button
-              onClick={() => handleWalletSignUp("metamask")}
-              disabled={isConnecting}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border border-border bg-muted/50 text-sm font-medium hover:bg-muted hover:border-primary/30 transition-all disabled:opacity-50"
-            >
-              {isConnecting ? (
-                <Loader2 size={18} className="text-primary animate-spin" />
-              ) : (
-                <span className="text-lg">🦊</span>
-              )}
-              {isConnected ? `Connected: ${shortenAddress(address)}` : "Continue with MetaMask"}
-            </button>
-            <button
-              onClick={() => handleWalletSignUp("walletconnect")}
-              disabled={isConnecting}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border border-border bg-muted/50 text-sm font-medium hover:bg-muted hover:border-primary/30 transition-all disabled:opacity-50"
-            >
-              {isConnecting ? (
-                <Loader2 size={18} className="text-primary animate-spin" />
-              ) : (
-                <Wallet size={18} className="text-primary" />
-              )}
-              Continue with WalletConnect
-            </button>
+            <div className="w-full rounded-xl border border-border bg-muted/50 px-4 py-4 text-sm">
+              <p className="text-xs text-muted-foreground mb-3 text-center">
+                {isConnected ? `Connected: ${shortenAddress(address)}` : "Connect with a Stellar wallet (Stellar Wallets Kit)"}
+              </p>
+              <div className="flex min-h-[48px] w-full items-center justify-center [&_button]:max-w-full">
+                <StellarKitConnectButton className="w-full flex justify-center" />
+              </div>
+            </div>
             <button
               onClick={() => navigate("/dashboard")}
               className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border border-border bg-muted/50 text-sm font-medium hover:bg-muted hover:border-accent/30 transition-all"

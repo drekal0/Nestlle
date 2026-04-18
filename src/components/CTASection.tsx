@@ -20,7 +20,7 @@ const CTASection = () => {
             Engagement?
           </h2>
           <p className="text-muted-foreground mb-10 max-w-lg mx-auto">
-            Join Nestlle and become part of the next generation of Web3 community engagement.
+            Join Nestlle and become part of the next generation of Stellar-native community engagement.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

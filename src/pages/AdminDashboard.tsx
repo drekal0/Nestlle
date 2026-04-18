@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import { adminStats, mockTasks } from "@/data/mockData";
+import { adminStats } from "@/data/mockData";
+import { useTasks } from "@/contexts/TaskContext";
 
 const AdminDashboard = () => {
+  const { tasks } = useTasks();
+
   const stats = [
     { label: "Total Users", value: adminStats.totalUsers.toLocaleString(), icon: "👥" },
     { label: "Tasks Created", value: adminStats.tasksCreated, icon: "📋" },
@@ -11,7 +14,7 @@ const AdminDashboard = () => {
     { label: "Active Users", value: adminStats.activeUsers.toLocaleString(), icon: "🔥" },
   ];
 
-  const recentTasks = mockTasks.slice(0, 4);
+  const recentTasks = tasks.slice(0, 4);
 
   return (
     <DashboardLayout variant="admin">
@@ -55,9 +58,8 @@ const AdminDashboard = () => {
             <Link
               key={task.id}
               to={`/admin/manage-tasks`}
-              className={`flex items-center justify-between p-5 hover:bg-muted/30 transition-colors ${
-                i < recentTasks.length - 1 ? "border-b border-border/50" : ""
-              }`}
+              className={`flex items-center justify-between p-5 hover:bg-muted/30 transition-colors ${i < recentTasks.length - 1 ? "border-b border-border/50" : ""
+                }`}
             >
               <div>
                 <p className="font-medium">{task.title}</p>

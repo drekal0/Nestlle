@@ -10,26 +10,28 @@ interface TipCreatorModalProps {
 }
 
 const tipAmounts = [
-  { label: "0.001 ETH", value: "0.001", usd: "~$3" },
-  { label: "0.005 ETH", value: "0.005", usd: "~$15" },
-  { label: "0.01 ETH", value: "0.01", usd: "~$30" },
-  { label: "0.05 ETH", value: "0.05", usd: "~$150" },
+  { label: "1 XLM", value: "1", usd: "~$0.12" },
+  { label: "5 XLM", value: "5", usd: "~$0.60" },
+  { label: "10 XLM", value: "10", usd: "~$1.20" },
+  { label: "50 XLM", value: "50", usd: "~$6" },
 ];
 
 const TipCreatorModal = ({ creatorName, isOpen, onClose }: TipCreatorModalProps) => {
   const { isConnected, balance } = useWallet();
-  const [selectedAmount, setSelectedAmount] = useState("0.005");
+  const [selectedAmount, setSelectedAmount] = useState("5");
   const [customAmount, setCustomAmount] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [sent, setSent] = useState(false);
 
   const handleTip = async () => {
     setIsSending(true);
-    // Simulate transaction
     await new Promise((r) => setTimeout(r, 2000));
     setIsSending(false);
     setSent(true);
-    setTimeout(() => { setSent(false); onClose(); }, 2500);
+    setTimeout(() => {
+      setSent(false);
+      onClose();
+    }, 2500);
   };
 
   return (
@@ -54,7 +56,7 @@ const TipCreatorModal = ({ creatorName, isOpen, onClose }: TipCreatorModalProps)
                 <Heart size={20} className="text-accent" />
                 <h3 className="font-display text-lg font-bold">Tip Creator</h3>
               </div>
-              <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
+              <button type="button" onClick={onClose} className="text-muted-foreground hover:text-foreground">
                 <X size={18} />
               </button>
             </div>
@@ -62,9 +64,9 @@ const TipCreatorModal = ({ creatorName, isOpen, onClose }: TipCreatorModalProps)
             {sent ? (
               <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="text-center py-8">
                 <CheckCircle2 size={48} className="text-green-400 mx-auto mb-3" />
-                <h4 className="font-display text-xl font-bold mb-1">Tip Sent!</h4>
+                <h4 className="font-display text-xl font-bold mb-1">Tip sent</h4>
                 <p className="text-sm text-muted-foreground">
-                  {customAmount || selectedAmount} ETH sent to {creatorName}
+                  {customAmount || selectedAmount} XLM sent to {creatorName}
                 </p>
               </motion.div>
             ) : (
@@ -76,7 +78,7 @@ const TipCreatorModal = ({ creatorName, isOpen, onClose }: TipCreatorModalProps)
                 {!isConnected ? (
                   <div className="text-center py-6 glass rounded-xl">
                     <Wallet size={32} className="text-muted-foreground mx-auto mb-2" />
-                    <p className="text-sm text-muted-foreground">Connect your wallet to send tips</p>
+                    <p className="text-sm text-muted-foreground">Connect your Stellar wallet to send tips</p>
                   </div>
                 ) : (
                   <>
@@ -84,7 +86,11 @@ const TipCreatorModal = ({ creatorName, isOpen, onClose }: TipCreatorModalProps)
                       {tipAmounts.map((tip) => (
                         <button
                           key={tip.value}
-                          onClick={() => { setSelectedAmount(tip.value); setCustomAmount(""); }}
+                          type="button"
+                          onClick={() => {
+                            setSelectedAmount(tip.value);
+                            setCustomAmount("");
+                          }}
                           className={`px-3 py-3 rounded-xl border text-sm font-medium transition-all ${
                             selectedAmount === tip.value && !customAmount
                               ? "border-primary bg-primary/10 text-primary"
@@ -98,23 +104,28 @@ const TipCreatorModal = ({ creatorName, isOpen, onClose }: TipCreatorModalProps)
                     </div>
 
                     <div className="mb-4">
-                      <label className="text-xs text-muted-foreground mb-1.5 block">Custom amount (ETH)</label>
+                      <label className="text-xs text-muted-foreground mb-1.5 block">Custom amount (XLM)</label>
                       <input
                         type="number"
-                        step="0.001"
+                        step="0.0000001"
+                        min="0"
                         value={customAmount}
-                        onChange={(e) => { setCustomAmount(e.target.value); setSelectedAmount(""); }}
+                        onChange={(e) => {
+                          setCustomAmount(e.target.value);
+                          setSelectedAmount("");
+                        }}
                         placeholder="0.00"
                         className="w-full px-4 py-3 rounded-lg bg-muted border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
                       />
                     </div>
 
                     <div className="flex items-center justify-between text-xs text-muted-foreground mb-4">
-                      <span>Your balance: {balance} ETH</span>
-                      <span>Network fee: ~0.0005 ETH</span>
+                      <span>Your balance: {balance} XLM</span>
+                      <span>Network fee: ~0.00001 XLM</span>
                     </div>
 
                     <button
+                      type="button"
                       onClick={handleTip}
                       disabled={isSending || (!selectedAmount && !customAmount)}
                       className="w-full py-3 rounded-xl bg-accent text-accent-foreground font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
@@ -127,7 +138,7 @@ const TipCreatorModal = ({ creatorName, isOpen, onClose }: TipCreatorModalProps)
                       ) : (
                         <>
                           <Heart size={16} />
-                          Send {customAmount || selectedAmount} ETH
+                          Send {customAmount || selectedAmount} XLM
                         </>
                       )}
                     </button>

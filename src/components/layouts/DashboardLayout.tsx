@@ -1,10 +1,11 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, ListChecks, Trophy, User, LogOut, LayoutDashboard, PlusCircle, Settings } from "lucide-react";
+import { Home, ListChecks, Trophy, User, LogOut, LayoutDashboard, PlusCircle, Settings, Gamepad2 } from "lucide-react";
 import WalletButton from "@/components/WalletButton";
 
 const userLinks = [
   { label: "Home", href: "/dashboard", icon: Home },
+  { label: "Games", href: "/dashboard/games", icon: Gamepad2 },
   { label: "Tasks", href: "/dashboard/tasks", icon: ListChecks },
   { label: "Leaderboard", href: "/dashboard/leaderboard", icon: Trophy },
   { label: "Profile", href: "/dashboard/profile", icon: User },
@@ -43,11 +44,10 @@ const DashboardLayout = ({ children, variant = "user" }: DashboardLayoutProps) =
               <Link
                 key={link.href}
                 to={link.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                  isActive
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${isActive
                     ? "bg-primary/15 text-primary"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                }`}
+                  }`}
               >
                 <link.icon size={18} />
                 {link.label}

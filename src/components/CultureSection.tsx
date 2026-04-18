@@ -30,7 +30,7 @@ const CultureSection = () => {
               <span className="text-gradient-gold">Creativity</span> on a Global Stage
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              Nestlle empowers creators, educators, and communities across Africa to share their culture with a global Web3 audience — through campaigns that promote art, knowledge, heritage, and participation while earning verifiable rewards.
+              Nestlle empowers creators, educators, and communities across Africa to share their culture with a global Stellar audience — through campaigns that promote art, knowledge, heritage, and participation while earning verifiable rewards.
             </p>
 
             <div className="grid grid-cols-2 gap-4">
