@@ -34,6 +34,9 @@ const mockWeb3Games = [
     {
         
         id: "g4",
+        contractId: "CD5KOSEHHZB456IWHXWW54GACTFZ7GBKPEQRIMAHOWN56G7APHGLFKQJ",
+        network: "testnet",
+        rpcUrl: "https://soroban-testnet.stellar.org",
         title: "Rock Paper Scissors",
         author: "Nestlle Web3 Team",
         image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&h=400&fit=crop",
