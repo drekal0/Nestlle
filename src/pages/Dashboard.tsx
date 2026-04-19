@@ -79,15 +79,15 @@ const Dashboard = () => {
               <Link
                 key={task.id}
                 to={`/dashboard/tasks/${task.id}`}
-                className="glass rounded-xl p-5 flex items-center justify-between hover:border-primary/30 transition-colors block"
+                className="glass rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between hover:border-primary/30 transition-colors block gap-4"
               >
                 <div>
-                  <h4 className="font-medium">{task.title}</h4>
-                  <p className="text-sm text-muted-foreground mt-1">{task.description}</p>
+                  <h4 className="font-medium text-base sm:text-lg">{task.title}</h4>
+                  <p className="text-sm text-muted-foreground mt-1 line-clamp-2 sm:line-clamp-none">{task.description}</p>
                 </div>
-                <span className={`text-xs font-medium px-3 py-1 rounded-full shrink-0 ml-4 ${task.rewardType === "badge"
-                    ? "bg-accent/15 text-accent"
-                    : "bg-primary/15 text-primary"
+                <span className={`text-xs font-medium px-3 py-1 rounded-full shrink-0 w-fit ${task.rewardType === "badge"
+                  ? "bg-accent/15 text-accent"
+                  : "bg-primary/15 text-primary"
                   }`}>
                   {task.reward}
                 </span>

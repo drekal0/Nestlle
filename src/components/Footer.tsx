@@ -9,7 +9,7 @@ const Footer = () => {
         </Link>
         <div className="flex gap-8 text-sm text-muted-foreground">
           <a href="#features" className="hover:text-foreground transition-colors">Features</a>
-          <a href="#culture" className="hover:text-foreground transition-colors">Culture</a>
+          <a href="#community" className="hover:text-foreground transition-colors">Community</a>
           <a href="#how-it-works" className="hover:text-foreground transition-colors">How It Works</a>
           <Link to="/login" className="hover:text-foreground transition-colors">Login</Link>
           <Link to="/signup" className="hover:text-foreground transition-colors">Sign Up</Link>

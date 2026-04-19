@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
+import { useWallet } from "@/contexts/WalletContext";
 
 const HeroSection = () => {
+  const { isConnected } = useWallet();
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <img src={heroBg} alt="" className="absolute inset-0 w-full h-full object-cover" width={1920} height={1080} />
@@ -23,7 +25,7 @@ const HeroSection = () => {
         >
           Fun on the Surface.{" "}
           <span className="text-gradient-primary">Trust Underneath.</span>{" "}
-          <span className="text-gradient-gold">Culture Within.</span>
+          <span className="text-gradient-gold">Community Within.</span>
         </motion.h1>
 
         <motion.p
@@ -32,7 +34,7 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.7 }}
           className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10"
         >
-          A verifiable engagement hub where communities play, learn, and earn — powered by Stellar transparency and rooted in African cultural advancement.
+          A verifiable engagement hub where communities play, learn, and earn — powered by Stellar transparency and anchored in a verifiable digital economy.
         </motion.p>
 
         <motion.div
@@ -41,12 +43,21 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.9 }}
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
-          <Link
-            to="/signup"
-            className="px-8 py-3.5 rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity glow-primary"
-          >
-            Get Started
-          </Link>
+          {isConnected ? (
+            <Link
+              to="/dashboard"
+              className="px-8 py-3.5 rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity glow-primary"
+            >
+              Go to Dashboard
+            </Link>
+          ) : (
+            <Link
+              to="/signup"
+              className="px-8 py-3.5 rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity glow-primary"
+            >
+              Get Started
+            </Link>
+          )}
           <a
             href="#features"
             className="px-8 py-3.5 rounded-lg glass text-foreground font-semibold hover:bg-muted transition-colors"

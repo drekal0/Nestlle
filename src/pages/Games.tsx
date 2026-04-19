@@ -50,7 +50,7 @@ const Games = () => {
     return (
         <DashboardLayout>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
                     <div>
                         <h1 className="font-display text-3xl font-bold mb-2">Web3 Games</h1>
                         <p className="text-muted-foreground">Play verified Stellar Game Studio matches and earn rewards.</p>

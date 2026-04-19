@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useWallet } from "@/contexts/WalletContext";
 
 const CTASection = () => {
+  const { isConnected } = useWallet();
   return (
     <section id="join" className="py-24 lg:py-32 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
@@ -24,18 +26,29 @@ const CTASection = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/signup"
-              className="px-8 py-3.5 rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity glow-primary"
-            >
-              Get Started
-            </Link>
-            <Link
-              to="/login"
-              className="px-8 py-3.5 rounded-lg glass text-foreground font-semibold hover:bg-muted transition-colors"
-            >
-              Login
-            </Link>
+            {isConnected ? (
+              <Link
+                to="/dashboard"
+                className="px-8 py-3.5 rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity glow-primary"
+              >
+                Go to Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/signup"
+                  className="px-8 py-3.5 rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity glow-primary"
+                >
+                  Get Started
+                </Link>
+                <Link
+                  to="/login"
+                  className="px-8 py-3.5 rounded-lg glass text-foreground font-semibold hover:bg-muted transition-colors"
+                >
+                  Login
+                </Link>
+              </>
+            )}
           </div>
         </motion.div>
       </div>

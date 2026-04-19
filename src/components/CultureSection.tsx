@@ -2,15 +2,15 @@ import { motion } from "framer-motion";
 import { Palette, Globe, BookOpen, Users } from "lucide-react";
 
 const initiatives = [
-  { icon: Palette, label: "African Art & Storytelling" },
-  { icon: Globe, label: "Local Innovation Challenges" },
-  { icon: BookOpen, label: "Cultural Education Quizzes" },
-  { icon: Users, label: "Community-Driven Events" },
+  { icon: Palette, label: "Global Creative Campaigns" },
+  { icon: Globe, label: "Ecosystem Innovation" },
+  { icon: BookOpen, label: "Verified Knowledge Hub" },
+  { icon: Users, label: "Community-Led Events" },
 ];
 
 const CultureSection = () => {
   return (
-    <section id="culture" className="py-24 lg:py-32 relative overflow-hidden">
+    <section id="community" className="py-24 lg:py-32 relative overflow-hidden">
       {/* Subtle background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-accent/5 blur-3xl" />
 
@@ -23,14 +23,14 @@ const CultureSection = () => {
             transition={{ duration: 0.6 }}
           >
             <span className="text-xs font-medium uppercase tracking-wider text-accent">
-              Rooted in Culture
+              Powered by Community
             </span>
             <h2 className="font-display text-4xl lg:text-5xl font-bold mt-3 mb-6">
-              Advancing African{" "}
-              <span className="text-gradient-gold">Creativity</span> on a Global Stage
+              Empowering Global{" "}
+              <span className="text-gradient-gold">Initiatives</span> on a Verifiable Stage
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              Nestlle empowers creators, educators, and communities across Africa to share their culture with a global Stellar audience — through campaigns that promote art, knowledge, heritage, and participation while earning verifiable rewards.
+              Nestlle connects creators, educators, and communities worldwide to the Stellar network — through campaigns that promote innovation, knowledge, and participation while earning verifiable rewards.
             </p>
 
             <div className="grid grid-cols-2 gap-4">
