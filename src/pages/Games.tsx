@@ -30,7 +30,17 @@ const mockWeb3Games = [
         tags: ["Racing", "PVP"],
         url: "https://jamesbachini.github.io/Stellar-Game-Studio/",
         players: 156
-    }
+    },
+    {
+        
+        id: "g4",
+        title: "Rock Paper Scissors",
+        author: "Nestlle Web3 Team",
+        image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&h=400&fit=crop",
+        tags: ["Action", "Arcade"],
+        url: "https://rock-paper-scissors-web-ten.vercel.app//",
+        players: 320
+    },
 ];
 
 const Games = () => {
