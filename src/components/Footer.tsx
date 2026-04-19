@@ -11,8 +11,6 @@ const Footer = () => {
           <a href="#features" className="hover:text-foreground transition-colors">Features</a>
           <a href="#community" className="hover:text-foreground transition-colors">Community</a>
           <a href="#how-it-works" className="hover:text-foreground transition-colors">How It Works</a>
-          <Link to="/login" className="hover:text-foreground transition-colors">Login</Link>
-          <Link to="/signup" className="hover:text-foreground transition-colors">Sign Up</Link>
         </div>
         <p className="text-xs text-muted-foreground">© 2026 Nestlle. All rights reserved.</p>
       </div>
