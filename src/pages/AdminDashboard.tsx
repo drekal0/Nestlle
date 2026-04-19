@@ -36,16 +36,16 @@ const AdminDashboard = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="flex gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row gap-4 mb-8">
           <Link
             to="/admin/create-task"
-            className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity glow-primary"
+            className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity glow-primary text-center"
           >
             + Create New Task
           </Link>
           <Link
             to="/admin/manage-tasks"
-            className="px-6 py-3 rounded-lg glass text-foreground font-medium hover:bg-muted transition-colors"
+            className="px-6 py-3 rounded-lg glass text-foreground font-medium hover:bg-muted transition-colors text-center"
           >
             Manage Tasks
           </Link>
@@ -58,15 +58,15 @@ const AdminDashboard = () => {
             <Link
               key={task.id}
               to={`/admin/manage-tasks`}
-              className={`flex items-center justify-between p-5 hover:bg-muted/30 transition-colors ${i < recentTasks.length - 1 ? "border-b border-border/50" : ""
+              className={`flex flex-col sm:flex-row sm:items-center justify-between p-5 hover:bg-muted/30 transition-colors gap-3 ${i < recentTasks.length - 1 ? "border-b border-border/50" : ""
                 }`}
             >
               <div>
-                <p className="font-medium">{task.title}</p>
+                <p className="font-medium text-base">{task.title}</p>
                 <p className="text-sm text-muted-foreground capitalize">{task.type} task</p>
               </div>
-              <div className="text-right">
-                <p className="text-sm">{task.participants} participants</p>
+              <div className="text-left sm:text-right">
+                <p className="text-sm font-medium">{task.participants} participants</p>
                 <p className="text-xs text-muted-foreground">{task.reward}</p>
               </div>
             </Link>

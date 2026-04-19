@@ -3,7 +3,7 @@ import { Coins, BookOpen, Palette, Gamepad2 } from "lucide-react";
 
 const creatorTypes = [
   { icon: BookOpen, title: "Educational Tasks", description: "Create learning content and quizzes that reward participants with knowledge badges." },
-  { icon: Palette, title: "Creative Campaigns", description: "Launch cultural and artistic campaigns that engage global Stellar communities." },
+  { icon: Palette, title: "Creative Campaigns", description: "Launch artistic and community campaigns that engage global Stellar ecosystems." },
   { icon: Gamepad2, title: "Games & Challenges", description: "Design mini-games and community challenges that drive engagement." },
   { icon: Coins, title: "Earn Tips", description: "Receive direct tips from participants and sponsors in supported tokens." },
 ];

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Gamepad2, ListChecks, Brain, MapPin, Coins, Shield } from "lucide-react";
+import { Gamepad2, ListChecks, Brain, Landmark, Coins, Shield } from "lucide-react";
 
 const features = [
   {
@@ -21,9 +21,9 @@ const features = [
     accent: "primary",
   },
   {
-    icon: MapPin,
-    title: "IRL Event Verification",
-    description: "Bridge digital and real-world with Luma integration — verify attendance and reward participants on-chain.",
+    icon: Landmark,
+    title: "Global Fiat Off-ramp",
+    description: "Connect your rewards to the real world. Seamlessly withdraw your earnings to local bank accounts via the Linkio Global Bridge.",
     accent: "accent",
   },
   {
@@ -82,11 +82,10 @@ const FeaturesSection = () => {
               className="glass rounded-2xl p-8 group hover:border-primary/30 transition-colors"
             >
               <div
-                className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 ${
-                  f.accent === "primary"
+                className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 ${f.accent === "primary"
                     ? "bg-primary/10 text-primary"
                     : "bg-accent/10 text-accent"
-                }`}
+                  }`}
               >
                 <f.icon size={24} />
               </div>

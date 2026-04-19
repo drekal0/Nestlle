@@ -4,7 +4,13 @@ import { Wallet, Copy, ExternalLink, LogOut, ChevronDown, Check } from "lucide-r
 import { useWallet } from "@/contexts/WalletContext";
 import StellarKitConnectButton from "@/components/StellarKitConnectButton";
 
-const WalletButton = ({ variant = "default" }: { variant?: "default" | "compact" }) => {
+const WalletButton = ({ 
+  variant = "default", 
+  dropdownDirection = "down" 
+}: { 
+  variant?: "default" | "compact";
+  dropdownDirection?: "up" | "down";
+}) => {
   const { address, isConnected, balance, disconnect, shortenAddress } = useWallet();
   const [showDropdown, setShowDropdown] = useState(false);
   const [showConnectModal, setShowConnectModal] = useState(false);
@@ -41,7 +47,9 @@ const WalletButton = ({ variant = "default" }: { variant?: "default" | "compact"
                 initial={{ opacity: 0, y: 8, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                className="absolute right-0 top-full mt-2 w-72 glass rounded-xl border border-border p-4 z-50"
+                className={`absolute right-0 ${
+                  dropdownDirection === "up" ? "bottom-full mb-2" : "top-full mt-2"
+                } w-72 glass rounded-xl border border-border p-4 z-50`}
               >
                 <div className="mb-3 pb-3 border-b border-border">
                   <p className="text-xs text-muted-foreground mb-1">Stellar</p>

@@ -12,7 +12,7 @@ export interface UserProfile {
 }
 
 const ADMIN_ADDRESSES = [
-  "GC2F6C5P7A4Y6R4E3W2Q1P0O9I8U7Y6T5R4E3W2Q1P0O9I8U7Y6T5R4E", // Placeholder admin
+  "GDIEOY6OH6VSSW3UU2M42WMPWXIPL5Z45UTLFJBDYZHSI3MBLVP5WC3V", // USER Admin
 ];
 
 const defaultProfile: UserProfile = {

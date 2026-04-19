@@ -149,17 +149,17 @@ const TaskDetail = () => {
                 </div>
               )}
 
-              <div className="mt-8 flex items-center justify-center gap-4">
+              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link
                   to="/dashboard/tasks"
-                  className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity"
+                  className="w-full sm:w-auto px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity text-center"
                 >
                   View More Tasks
                 </Link>
                 {isConnected && (
                   <button
                     onClick={() => setShowTip(true)}
-                    className="px-6 py-3 rounded-lg border border-accent/30 text-accent font-medium hover:bg-accent/10 transition-colors flex items-center gap-2"
+                    className="w-full sm:w-auto px-6 py-3 rounded-lg border border-accent/30 text-accent font-medium hover:bg-accent/10 transition-colors flex items-center justify-center gap-2"
                   >
                     <Heart size={16} />
                     Tip Creator
@@ -220,12 +220,12 @@ const TaskDetail = () => {
                   </div>
                 )}
 
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-3">
                   {status === "not_started" && (
                     <button
                       onClick={handleStart}
                       disabled={(task.type === "onchain" || task.type === "onchain_game") && !isConnected}
-                      className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity glow-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full sm:w-auto px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity glow-primary disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Start Task
                     </button>
@@ -233,7 +233,7 @@ const TaskDetail = () => {
                   {status === "in_progress" && task.type !== "onchain" && task.type !== "onchain_game" && (
                     <button
                       onClick={handleComplete}
-                      className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity glow-primary flex items-center gap-2"
+                      className="w-full sm:w-auto px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity glow-primary flex items-center justify-center gap-2"
                     >
                       <CheckCircle2 size={18} />
                       Mark as Completed
@@ -243,7 +243,7 @@ const TaskDetail = () => {
                     <button
                       onClick={handleVerify}
                       disabled={isVerifying}
-                      className="px-6 py-3 rounded-lg bg-green-500 text-white font-medium hover:opacity-90 transition-opacity glow-primary flex items-center gap-2 disabled:opacity-50"
+                      className="w-full sm:w-auto px-6 py-3 rounded-lg bg-green-500 text-white font-medium hover:opacity-90 transition-opacity glow-primary flex items-center justify-center gap-2 disabled:opacity-50"
                     >
                       <CheckCircle2 size={18} />
                       {isVerifying ? "Verifying On-Chain..." : "Verify On-Chain"}
@@ -253,7 +253,7 @@ const TaskDetail = () => {
                     <button
                       onClick={handleVerify}
                       disabled={isVerifying}
-                      className="px-6 py-3 rounded-lg bg-accent text-accent-foreground font-medium hover:opacity-90 transition-opacity glow-gold flex items-center gap-2 disabled:opacity-50"
+                      className="w-full sm:w-auto px-6 py-3 rounded-lg bg-accent text-accent-foreground font-medium hover:opacity-90 transition-opacity glow-gold flex items-center justify-center gap-2 disabled:opacity-50"
                     >
                       <Gamepad2 size={18} />
                       {isVerifying ? "Verifying Play..." : "Verify Web3 Play"}
@@ -269,7 +269,7 @@ const TaskDetail = () => {
                   {isConnected && status !== "not_started" && (
                     <button
                       onClick={() => setShowTip(true)}
-                      className="px-4 py-3 rounded-lg border border-accent/30 text-accent text-sm font-medium hover:bg-accent/10 transition-colors flex items-center gap-2"
+                      className="w-full sm:w-auto px-4 py-3 rounded-lg border border-accent/30 text-accent text-sm font-medium hover:bg-accent/10 transition-colors flex items-center justify-center gap-2"
                     >
                       <Heart size={16} />
                       Tip Creator

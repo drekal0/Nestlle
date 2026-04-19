@@ -1,16 +1,18 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LayoutDashboard } from "lucide-react";
+import { useWallet } from "@/contexts/WalletContext";
 
 const navLinks = [
   { label: "Features", href: "#features" },
-  { label: "Culture", href: "#culture" },
+  { label: "Community", href: "#community" },
   { label: "How It Works", href: "#how-it-works" },
 ];
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const { isConnected } = useWallet();
 
   return (
     <motion.nav
@@ -35,18 +37,30 @@ const Navbar = () => {
               {link.label}
             </a>
           ))}
-          <Link
-            to="/login"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Login
-          </Link>
-          <Link
-            to="/signup"
-            className="px-5 py-2 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity"
-          >
-            Get Started
-          </Link>
+          {isConnected ? (
+            <Link
+              to="/dashboard"
+              className="flex items-center gap-2 px-5 py-2 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity glow-primary"
+            >
+              <LayoutDashboard size={16} />
+              Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Login
+              </Link>
+              <Link
+                to="/signup"
+                className="px-5 py-2 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity"
+              >
+                Get Started
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile toggle */}
@@ -74,16 +88,29 @@ const Navbar = () => {
                   {link.label}
                 </a>
               ))}
-              <Link to="/login" onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground transition-colors">
-                Login
-              </Link>
-              <Link
-                to="/signup"
-                onClick={() => setOpen(false)}
-                className="px-5 py-2 rounded-lg bg-primary text-primary-foreground font-medium text-sm text-center"
-              >
-                Get Started
-              </Link>
+              {isConnected ? (
+                <Link
+                  to="/dashboard"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center justify-center gap-2 px-5 py-2 rounded-lg bg-primary text-primary-foreground font-medium text-sm text-center"
+                >
+                  <LayoutDashboard size={16} />
+                  Dashboard
+                </Link>
+              ) : (
+                <>
+                  <Link to="/login" onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground transition-colors">
+                    Login
+                  </Link>
+                  <Link
+                    to="/signup"
+                    onClick={() => setOpen(false)}
+                    className="px-5 py-2 rounded-lg bg-primary text-primary-foreground font-medium text-sm text-center"
+                  >
+                    Get Started
+                  </Link>
+                </>
+              )}
             </div>
           </motion.div>
         )}
